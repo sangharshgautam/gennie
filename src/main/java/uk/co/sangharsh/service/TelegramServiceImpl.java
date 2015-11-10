@@ -21,7 +21,6 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
-import org.glassfish.jersey.test.TestProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.client.method.Method;
@@ -52,8 +51,6 @@ public class TelegramServiceImpl implements TelegramService {
 	@PostConstruct
 	public void setClientProperties(){
 		ClientConfig cc = new ClientConfig()
-				.property(TestProperties.DUMP_ENTITY, true)
-				.property(TestProperties.LOG_TRAFFIC, true)
 				.property(MarshallerProperties.JSON_ATTRIBUTE_PREFIX, "@")
 				.register(MoxyJsonFeature.class)
 				.register(new LoggingFilter(LOGGER, true))
