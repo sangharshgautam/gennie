@@ -1,0 +1,2 @@
+insert into ADDRESS (UUID, CITY, COUNTRY) values ('2c91880c508f9d1a01508f9d361b0001', 'Leeds', 'UK');
+insert into CUSTOMER (UUID, ADDR_ID, NAME) values ('2c91880c508f9d1a01508f9d35f60000', '2c91880c508f9d1a01508f9d361b0001', 'Test Data');
