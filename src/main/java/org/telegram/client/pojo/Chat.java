@@ -27,5 +27,8 @@ public class Chat extends Identifiable{
 	public void setChatType(String chatType) {
 		this.chatType = chatType;
 	}
-	
+
+	public String getChatType() {
+		return chatType;
+	}
 }
