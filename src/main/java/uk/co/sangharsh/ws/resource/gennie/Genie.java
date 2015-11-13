@@ -22,5 +22,6 @@ public class Genie extends ResourceConfig{
 		register(MoxyJsonFeature.class);
 		register(LoggingFilter.class);
 		register(MultiPartFeature.class);
+		register(DefaultExceptionMapper.class);
     }
 }
