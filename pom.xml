@@ -54,6 +54,7 @@
 		<hibernate.version>4.2.11.Final</hibernate.version>
 		
 		<testng.version>6.8.7</testng.version>
+		<mysql.connector.version>5.1.35</mysql.connector.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -263,6 +264,13 @@
 					</plugin>
 				</plugins>
 			</build>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<version>${mysql.connector.version}</version>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 	<build>
