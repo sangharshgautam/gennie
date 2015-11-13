@@ -13,6 +13,7 @@ public class DefaultExceptionMapper implements ExceptionMapper<Throwable> {
 	
 	@Override
 	public Response toResponse(Throwable exception) {
+		exception.printStackTrace();
 		ResponseBuilder builder;
 		if (exception instanceof WebApplicationException) {
 			WebApplicationException webAppExcept = (WebApplicationException) exception;
