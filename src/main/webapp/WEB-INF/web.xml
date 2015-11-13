@@ -16,7 +16,13 @@
 	<listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-
+	<servlet>
+        <servlet-name>uk.co.sangharsh.ws.resource.gennie.Genie</servlet-name>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uk.co.sangharsh.ws.resource.gennie.Genie</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
 	<error-page>
 	    <error-code>404</error-code>
 	    <location>/Error.jsp</location>
