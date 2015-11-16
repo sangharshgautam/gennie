@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,7 +36,7 @@ public class Chat extends Identifiable{
 	@Column
 	private String lastName; 	//Optional. User's or bot's last name
 	
-	@Column(name="TYPE")
+	@Transient
 	private String chatType;
 
 	@XmlElement(name="type", required = true)
