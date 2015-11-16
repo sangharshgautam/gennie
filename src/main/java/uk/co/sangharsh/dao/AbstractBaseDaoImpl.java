@@ -14,8 +14,13 @@ public abstract class AbstractBaseDaoImpl<T> implements BaseDao<T>{
 	}
 	
 	@Override
-	public void create(T customer) {
-		getSessionFactory().save(customer);
+	public void create(T entity) {
+		getSessionFactory().save(entity);
+	}
+	
+	@Override
+	public void merge(T entity) {
+		getSessionFactory().merge(entity);
 	}
 
 	@Override
@@ -26,8 +31,8 @@ public abstract class AbstractBaseDaoImpl<T> implements BaseDao<T>{
 	
 
 	@Override
-	public void update(T customer) {
-		getSessionFactory().update(customer);
+	public void update(T entity) {
+		getSessionFactory().update(entity);
 	}
 	
 	protected Session getSessionFactory() {

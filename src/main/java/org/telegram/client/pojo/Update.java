@@ -1,6 +1,5 @@
 package org.telegram.client.pojo;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -11,6 +10,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,7 +24,8 @@ public class Update extends Identifiable{
 	private int id;
 	
 	@XmlElement(required = true)
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
+	@Cascade({CascadeType.SAVE_UPDATE})
 	private Telegram message;
 
 	private boolean processed = false;

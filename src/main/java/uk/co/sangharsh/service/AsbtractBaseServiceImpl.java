@@ -9,8 +9,13 @@ public abstract class AsbtractBaseServiceImpl<T> implements BaseService<T> {
 	
 	
 	@Override
-    public void create(T customer) {
-		getDao().create(customer);
+    public void create(T entity) {
+		getDao().create(entity);
+    }
+	
+	@Override
+    public void merge(T entity) {
+		getDao().merge(entity);
     }
 
 	@Override

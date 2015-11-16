@@ -3,7 +3,6 @@ package org.telegram.client.pojo;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -42,12 +41,12 @@ public class Telegram extends Identifiable{
 	private int id;
 	
 	@XmlElement(required = true)
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private User from;
 	
 	@XmlElement
 	@Transient
-	private Chat chat;;
+	private Chat chat;
 	
 	@XmlElement(required = true)
 	@XmlJavaTypeAdapter(value = UnixDateTimeAdapter.class)
@@ -57,7 +56,7 @@ public class Telegram extends Identifiable{
 	private Conversation chat;*/
 	
 	@XmlElement(name="forward_from")
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private User forwardFrom;
 	
 	@XmlElement(name="forward_date")

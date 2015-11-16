@@ -6,5 +6,6 @@ import org.telegram.client.pojo.Update;
 
 public interface UpdateService extends BaseService<Update>{
 
+	public void create(Update update);
 	List<Update> findUnprocessed();
 }
