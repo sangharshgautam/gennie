@@ -59,7 +59,7 @@ public class Telegram extends Identifiable{
 	
 	@XmlElement(name="forward_from")
 	@ManyToOne
-	@Cascade(CascadeType.MERGE)
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE})
 	private User forwardFrom;
 	
 	@XmlElement(name="forward_date")
