@@ -13,8 +13,8 @@
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
 	<util:properties id="propertyConfigurer" location="classpath:env/dev.properties" />
-	<context:property-placeholder properties-ref="propertyConfigurer" ignore-resource-not-found="true" 
-		    location="classpath:env/local.properties" />
+<!-- 	<context:property-placeholder properties-ref="propertyConfigurer" ignore-resource-not-found="true" 
+		    location="classpath:env/local.properties" /> -->
 	<context:property-placeholder properties-ref="propertyConfigurer" ignore-resource-not-found="true" 
 		    location="file:///var/lib/openshift/5641f4152d52719591000048/app-root/repo/src/main/resources/env/openshift.properties" />
 		
