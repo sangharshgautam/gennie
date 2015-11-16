@@ -17,6 +17,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.telegram.client.adpater.UnixDateTimeAdapter;
 
 @XmlRootElement
@@ -57,6 +59,7 @@ public class Telegram extends Identifiable{
 	
 	@XmlElement(name="forward_from")
 	@ManyToOne
+	@Cascade(CascadeType.MERGE)
 	private User forwardFrom;
 	
 	@XmlElement(name="forward_date")
