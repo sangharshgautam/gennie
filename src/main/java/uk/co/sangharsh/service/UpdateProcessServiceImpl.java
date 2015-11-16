@@ -15,21 +15,21 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 
 	@Autowired
 	private TelegramService telegramService;
-	
+
 	@Autowired
-	private UpdateService updateService; 
-	
+	private UpdateService updateService;
+
 	@Override
 	public void pullUpdates() {
 		GetUpdatesResult result = telegramService.getUpdates();
-		if(result.isOk()){
+		if (result.isOk()) {
 			pushUpdates(result.getResult());
 		}
 	}
 
 	@Override
 	public void pushUpdates(List<Update> updates) {
-		for(Update update : updates){
+		for (Update update : updates) {
 			push(update);
 		}
 	}
@@ -37,9 +37,9 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	@Override
 	public void push(Update update) {
 		Update dbUpdate = updateService.findBy(update.getId());
-		if(dbUpdate == null){
+		if (dbUpdate == null) {
 			updateService.create(update);
-		}else{
+		} else {
 			System.out.println("Update already received");
 		}
 	}
@@ -47,7 +47,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	@Override
 	public void process() {
 		List<Update> updates = updateService.findUnprocessed();
-		for(Update update : updates){
+		for (Update update : updates) {
 			telegramService.send(update, false, new TextReply("Thanks for connecting! Gennie will back back!"));
 			updateService.update(update.markProcessed());
 		}
