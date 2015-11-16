@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
@@ -19,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name="TG_CHAT")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING,length=10)
+@XmlSeeAlso({PrivateChat.class, GroupChat.class, ChannelChat.class})
 public class Chat extends Identifiable{
 	
 	@XmlElement(required = true)
