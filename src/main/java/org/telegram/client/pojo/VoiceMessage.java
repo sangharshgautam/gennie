@@ -8,12 +8,13 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name="VIDEO")
-public class VideoMessage extends StickerMessage{
+@XmlType(name = "VOICE")
+public class VoiceMessage extends MediaMessage {
 	@XmlElement(required = true)
-	private int duration; 	//Duration of the video in seconds as defined by sender
-	
-	@XmlElement(name="mime_type")
-	private String mimetype; 	//Optional. Mime type of a file as defined by sender
-	
+	private int duration; // Duration of the video in seconds as defined by
+							// sender
+
+	@XmlElement(name = "mime_type")
+	private String mimetype; // Optional. Mime type of a file as defined by
+								// sender
 }
