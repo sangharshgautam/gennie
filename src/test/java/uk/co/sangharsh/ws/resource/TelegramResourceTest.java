@@ -22,11 +22,5 @@ public class TelegramResourceTest extends NikweliJerseyTest{
 				.request()
 				.accept(APPLICATION_JSON_TYPE).get(User.class);
     }
-	@Test(priority = 1)
-    public void shouldGetUpdates() throws Exception {
-			final List<Update> updates = target().path(TelegramResource.ROOT).path(TelegramResource.GET_UPDATES)
-				.request()
-				.accept(APPLICATION_JSON_TYPE).get(new GenericType<List<Update>>() {});
-    }
     
 }
