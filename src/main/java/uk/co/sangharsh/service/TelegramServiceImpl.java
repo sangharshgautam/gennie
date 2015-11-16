@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
+import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -27,8 +28,8 @@ import org.telegram.client.method.Method;
 import org.telegram.client.param.Param;
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
-import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.MessageResult;
+import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.UserProfilePhotos;
 
@@ -51,6 +52,7 @@ public class TelegramServiceImpl implements TelegramService {
 	@PostConstruct
 	public void setClientProperties(){
 		ClientConfig cc = new ClientConfig()
+				.property(UnmarshallerProperties.JSON_ATTRIBUTE_PREFIX, "@")
 				.property(MarshallerProperties.JSON_ATTRIBUTE_PREFIX, "@")
 				.register(MoxyJsonFeature.class)
 				.register(new LoggingFilter(LOGGER, true))
