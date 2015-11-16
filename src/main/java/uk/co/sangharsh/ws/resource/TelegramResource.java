@@ -15,22 +15,20 @@ import uk.co.sangharsh.service.TelegramService;
 
 @Component
 @Path(TelegramResource.ROOT)
-@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 @Consumes(MediaType.APPLICATION_JSON)
 public class TelegramResource {
-	
+
 	public static final String GET_ME = "getMe";
 
 	public static final String ROOT = "telegram";
 
-	
-	
 	@Autowired
 	private TelegramService telegramService;
-	
+
 	@GET
 	@Path(GET_ME)
-	public User getMe(){
+	public User getMe() {
 		GetMeResult result = telegramService.getMe();
 		return result.getResult();
 	}
