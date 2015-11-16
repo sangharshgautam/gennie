@@ -1,6 +1,6 @@
 package uk.co.sangharsh.dao;
 
-public interface BaseDao<T> {
+public interface Dao<T> {
 
 	public void create(T entity);
 	

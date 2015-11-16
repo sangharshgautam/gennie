@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
-import org.telegram.client.pojo.User;
 
-import uk.co.sangharsh.dao.BaseDao;
+import uk.co.sangharsh.dao.Dao;
 import uk.co.sangharsh.dao.UpdateDao;
 
 @Service
-public class UpdateServiceImpl extends AsbtractBaseServiceImpl<Update> implements UpdateService {
+public class UpdateServiceImpl extends AsbtractServiceImpl<Update> implements UpdateService {
 	
 	@Autowired 
 	private UpdateDao updateDao;
@@ -19,20 +19,19 @@ public class UpdateServiceImpl extends AsbtractBaseServiceImpl<Update> implement
 	@Autowired 
 	private UserService userService;
 	
+	@Autowired 
+	private ChatService chatService;
+	
 	@Override
     public void create(Update update) {
-		User from = update.getMessage().getFrom();
-		User dbFrom = userService.findBy(from.getId());
-		if(dbFrom == null){
-			userService.create(from);
-		}else{
-			userService.merge(from);
-		}
+		Telegram message = update.getMessage();
+		userService.merge(message.from());
+		chatService.merge(message.chat());
 		getDao().create(update);
     }
 	
 	@Override
-	protected BaseDao<Update> getDao() {
+	protected Dao<Update> getDao() {
 		return this.updateDao;
 	}
 

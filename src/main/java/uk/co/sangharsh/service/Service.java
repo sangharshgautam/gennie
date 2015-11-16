@@ -1,6 +1,6 @@
 package uk.co.sangharsh.service;
 
-public interface BaseService<T> {
+public interface Service<T> {
 	public void create(T entity);
 	
 	public void merge(T entity);

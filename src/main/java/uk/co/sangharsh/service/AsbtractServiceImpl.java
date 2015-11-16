@@ -2,10 +2,10 @@ package uk.co.sangharsh.service;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import uk.co.sangharsh.dao.BaseDao;
+import uk.co.sangharsh.dao.Dao;
 
 @Transactional
-public abstract class AsbtractBaseServiceImpl<T> implements BaseService<T> {
+public abstract class AsbtractServiceImpl<T> implements Service<T> {
 	
 	
 	@Override
@@ -27,5 +27,5 @@ public abstract class AsbtractBaseServiceImpl<T> implements BaseService<T> {
 	public void update(T customer) {
 		getDao().update(customer);
 	}
-	protected abstract BaseDao<T> getDao();
+	protected abstract Dao<T> getDao();
 }

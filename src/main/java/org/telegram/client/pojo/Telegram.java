@@ -45,7 +45,7 @@ public class Telegram extends Identifiable{
 	private User from;
 	
 	@XmlElement
-	@Transient
+	@ManyToOne
 	private Chat chat;
 	
 	@XmlElement(required = true)
@@ -108,7 +108,7 @@ public class Telegram extends Identifiable{
 		return id;
 	}
 
-	public User getFrom() {
+	public User from() {
 		return from;
 	}
 	

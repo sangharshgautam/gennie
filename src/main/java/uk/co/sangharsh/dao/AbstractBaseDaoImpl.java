@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractBaseDaoImpl<T> implements BaseDao<T>{
+public abstract class AbstractBaseDaoImpl<T> implements Dao<T>{
 	@Autowired
 	private SessionFactory sessionFactory;
 	private Class<T> clazz;
