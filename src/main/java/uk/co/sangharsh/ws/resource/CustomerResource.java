@@ -28,14 +28,14 @@ public class CustomerResource {
 	
 	@POST
 	public Customer create(Customer customer){
-		customerService.createCustomer(customer);
+		customerService.create(customer);
 		return customer;
 	}
 	
 	@GET
 	@Path("{uuid}")
-	public Customer get(@PathParam("uuid") String uuid){
-		return customerService.findBy(uuid);
+	public Customer get(@PathParam("uuid") int id){
+		return customerService.findBy(id);
 	}
 	
 	@PUT

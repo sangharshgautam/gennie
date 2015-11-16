@@ -28,7 +28,7 @@ import org.telegram.client.param.Param;
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
 import org.telegram.client.pojo.Telegram;
-import org.telegram.client.pojo.TelegramWrapper;
+import org.telegram.client.pojo.MessageResult;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.UserProfilePhotos;
 
@@ -66,17 +66,21 @@ public class TelegramServiceImpl implements TelegramService {
 		return Method.getMe.get(webTarget(), new GenericType<GetMeResult>() {});
 	}
 
-	public TelegramWrapper send(final Update update, final boolean addParentRef, Sendable message) {
+	public MessageResult send(final Update update, final boolean addParentRef, Sendable message) {
 		return sendIn(update, addParentRef, message);
 	}
-	
-	public TelegramWrapper sendIn(final Update update, final boolean addParentRef, Sendable message) {
+	@Override
+	public MessageResult message(final String chatId, String message) {
+		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message);
+		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+	}
+	public MessageResult sendIn(final Update update, final boolean addParentRef, Sendable message) {
 		final String chatId = update.getMessage().chat().getIdAsString();
 		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message.inLine());
 		if(addParentRef){
 			form = setParamToForm(Param.REPLY_TO_MESSAGE_ID, update.getMessage().getIdAsString(), form);
 		}
-		return Method.sendMessage.post(webTarget(), TelegramWrapper.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
 	private Form setParamToForm(Param param , String value, Form form) {

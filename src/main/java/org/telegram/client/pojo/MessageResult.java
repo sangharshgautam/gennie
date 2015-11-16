@@ -6,14 +6,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TelegramWrapper {
-	private boolean ok;
+public class MessageResult extends AbstractResult<Telegram>{
 	private Telegram result;
-	public boolean isOk() {
-		return ok;
-	}
 	public Telegram getResult() {
 		return result;
 	}
-	
 }

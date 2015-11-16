@@ -7,6 +7,7 @@
 	<persistence-unit name="webPersistenceUnit" transaction-type="RESOURCE_LOCAL">
 		<class>uk.co.sangharsh.common.model.Customer</class>
 		<class>uk.co.sangharsh.common.model.Address</class>
+		<class>org.telegram.client.pojo.Update</class>
 		<validation-mode>NONE</validation-mode>
 		<properties>
 			<!-- <property name="hibernate.hbm2ddl.auto" value="create"/> -->

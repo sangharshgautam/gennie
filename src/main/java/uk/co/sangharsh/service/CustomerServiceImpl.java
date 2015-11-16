@@ -2,31 +2,19 @@ package uk.co.sangharsh.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.sangharsh.common.model.Customer;
+import uk.co.sangharsh.dao.BaseDao;
 import uk.co.sangharsh.dao.CustomerDao;
 
-@Service("customerService")
-@Transactional
-public class CustomerServiceImpl implements CustomerService {
- 
-	@Autowired
-    private CustomerDao customerDAO;
- 
-    @Override
-    public void createCustomer(Customer customer) {
-        customerDAO.create(customer);
-    }
-
+@Service
+public class CustomerServiceImpl extends AsbtractBaseServiceImpl<Customer> implements CustomerService {
+	
+	@Autowired 
+	private CustomerDao customerDAO;
+	
 	@Override
-    public Customer findBy(String uuid) {
-		return customerDAO.findBy(uuid);
+	protected BaseDao<Customer> getDao() {
+		return this.customerDAO;
 	}
-
-	@Override
-	public void update(Customer customer) {
-		customerDAO.update(customer);
-	}
- 
 }

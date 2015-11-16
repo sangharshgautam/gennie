@@ -16,7 +16,7 @@ public class TransactionManagerMain {
                 CustomerServiceImpl.class);
  
         Customer cust = CustomerTestUtil.dummy();
-        customerManager.createCustomer(cust);
+        customerManager.create(cust);
  
         ctx.close();
     }
