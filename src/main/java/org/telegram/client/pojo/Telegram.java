@@ -60,7 +60,8 @@ public class Telegram extends Identifiable{
 	private User forwardFrom;
 	
 	@XmlElement(name="forward_date")
-	private String forwardDate;
+	@XmlJavaTypeAdapter(value = UnixDateTimeAdapter.class)
+	private Date forwardDate;
 	
 	@XmlElement(name="reply_to_message")
 	@Transient
