@@ -22,7 +22,7 @@ import uk.co.sangharsh.service.TelegramService;
 import uk.co.sangharsh.service.UpdateProcessService;
 
 @Component
-@Path(TelegramResource.ROOT)
+@Path(TelegramUpdateResource.ROOT)
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes(MediaType.APPLICATION_JSON)
 public class TelegramUpdateResource {
