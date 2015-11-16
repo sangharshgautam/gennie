@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
+import org.telegram.client.pojo.User;
 
 import uk.co.sangharsh.dao.Dao;
 import uk.co.sangharsh.dao.UpdateDao;
@@ -25,6 +26,10 @@ public class UpdateServiceImpl extends AsbtractServiceImpl<Update> implements Up
 	@Override
     public void create(Update update) {
 		Telegram message = update.getMessage();
+		User forwardFrom = message.forwardFrom();
+		if(forwardFrom != null){
+			userService.merge(forwardFrom);
+		}
 		userService.merge(message.from());
 		chatService.merge(message.chat());
 		getDao().create(update);
