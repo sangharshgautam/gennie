@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -57,7 +60,6 @@ public class Telegram extends Identifiable{
 	
 	@XmlElement(name="forward_from")
 	@ManyToOne
-//	@Cascade({CascadeType.PERSIST, CascadeType.MERGE})
 	private User forwardFrom;
 	
 	@XmlElement(name="forward_date")
@@ -75,14 +77,21 @@ public class Telegram extends Identifiable{
 	@XmlElements(value={
 		@XmlElement(name="audio", type=AudioMessage.class),
 		@XmlElement(name="document", type=DocumentMessage.class),
-//		@XmlElement(name="photo", type=List.class),
+//		@XmlElement(name="photo", type=PhotoList.class),
 		@XmlElement(name="sticker", type=StickerMessage.class),
 		@XmlElement(name="video", type=VideoMessage.class),
 		@XmlElement(name="contact", type=ContactMessage.class),
 		@XmlElement(name="location", type=LocationMessage.class)
 	})
-	@Transient
-	private Message details;
+	@ManyToOne
+	@JoinColumn(name= "TG_MEDIA_ID")
+	private MediaMessage details;
+	
+	@XmlElement
+	@ManyToMany
+	@JoinTable(name = "TG_MESSAGE_MEDIA")
+	@JoinColumn(name = "TG_MEDIA_ID")
+	private List<PhotoSize> photo;
 	
 	@XmlElement(name="new_chat_participant")
 	@Transient
@@ -140,11 +149,16 @@ public class Telegram extends Identifiable{
 		return chat;
 	}
 
-	public Message getDetails() {
+	public Message details() {
 		return details;
 	}
 
 	public User forwardFrom() {
 		return forwardFrom;
 	}
+
+	public List<PhotoSize> photo() {
+		return photo;
+	}
+	
 }

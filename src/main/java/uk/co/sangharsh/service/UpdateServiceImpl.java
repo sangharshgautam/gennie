@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.client.pojo.Message;
+import org.telegram.client.pojo.PhotoSize;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
@@ -23,12 +25,26 @@ public class UpdateServiceImpl extends AsbtractServiceImpl<Update> implements Up
 	@Autowired 
 	private ChatService chatService;
 	
+	@Autowired 
+	private MessageService messageService;
+	
+	@Autowired
+	private PhotoSizeService photoSizeService;
+	
 	@Override
     public void create(Update update) {
 		Telegram message = update.getMessage();
 		User forwardFrom = message.forwardFrom();
 		if(forwardFrom != null){
 			userService.merge(forwardFrom);
+		}
+		Message details = message.details();
+		if(details != null){
+			messageService.merge(details);
+		}
+		List<PhotoSize> photo = message.photo();
+		if (photo != null) {
+			photoSizeService.mergeAll(photo);
 		}
 		userService.merge(message.from());
 		chatService.merge(message.chat());

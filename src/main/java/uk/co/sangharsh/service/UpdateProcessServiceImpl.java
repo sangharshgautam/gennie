@@ -48,7 +48,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	public void process() {
 		List<Update> updates = updateService.findUnprocessed();
 		for (Update update : updates) {
-			telegramService.send(update, false, new TextReply("Thanks for connecting! Gennie will be back soon!"));
+			telegramService.send(update, false, new TextReply(update.getMessage().from().firstname()+" Thanks for connecting! Gennie will be back soon!"));
 			updateService.update(update.markProcessed());
 		}
 	}

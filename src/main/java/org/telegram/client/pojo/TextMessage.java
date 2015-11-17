@@ -1,5 +1,5 @@
 package org.telegram.client.pojo;
 
 
-public class TextMessage implements Message{
+public class TextMessage extends Message{
 }

@@ -1,5 +1,8 @@
 package org.telegram.client.pojo;
 
-public interface Message {
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+public abstract class Message {
 
 }

@@ -53,5 +53,9 @@ public class User extends Identifiable{
 	public int getId() {
 		return this.id;
 	}
+
+	public String firstname() {
+		return firstname;
+	}
 	
 }

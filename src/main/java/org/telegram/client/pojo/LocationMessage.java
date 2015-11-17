@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class LocationMessage implements Message{
+public class LocationMessage extends Message{
 	private Float longitude; 	//Longitude as defined by sender
 	private Float latitude;		//Latitude as defined by sender
 }

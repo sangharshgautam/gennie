@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ContactMessage implements Message{
+public class ContactMessage extends Message{
 	@XmlElement(name="phone_number", required = true)
 	private String phoneNumber; //String 	Contact's phone number
 	
