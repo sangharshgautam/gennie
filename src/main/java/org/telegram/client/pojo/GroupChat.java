@@ -1,4 +1,4 @@
-/*package org.telegram.client.pojo;
+package org.telegram.client.pojo;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -10,4 +10,3 @@ import javax.xml.bind.annotation.XmlType;
 public class GroupChat extends Chat {
 
 }
-*/

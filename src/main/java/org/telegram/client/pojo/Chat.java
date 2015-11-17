@@ -9,11 +9,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name="TG_CHAT")
+@XmlSeeAlso({PrivateChat.class, GroupChat.class, ChannelChat.class})
 public class Chat extends Identifiable{
 	
 	@XmlElement(required = true)
@@ -29,15 +31,15 @@ public class Chat extends Identifiable{
 	private String lastName; 	//Optional. User's or bot's last name
 	
 	@Transient
-	private String type;
+	private String chatType;
 
 	@XmlElement(name="type", required = true)
 	public void setChatType(String chatType) {
-		this.type = chatType;
+		this.chatType = chatType;
 	}
 
 	public String getChatType() {
-		return type;
+		return chatType;
 	}
 
 	@Override
