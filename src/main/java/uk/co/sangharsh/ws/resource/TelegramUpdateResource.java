@@ -66,7 +66,6 @@ public class TelegramUpdateResource {
 	@POST
 	@Path(PROCESS_AUTO)
 	public Response processAuto(Update update){
-		System.out.println(update);
 		updateProcessService.push(update);
 		updateProcessService.process();
 		return status(OK).build();

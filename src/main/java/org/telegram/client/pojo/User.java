@@ -57,5 +57,10 @@ public class User extends Identifiable{
 	public String firstname() {
 		return firstname;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstname=" + firstname + ", lastName="
+				+ lastName + ", username=" + username + "]";
+	}
 }
