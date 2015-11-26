@@ -55,8 +55,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			TextReply reply = TextReply.thank(message.from());
 			if("whoami".equals(message.text())){
 				reply = new TextReply(message.from().toString());
-				result = telegramService.send(update, false, reply);
 			}
+			result = telegramService.send(update, false, reply);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}
