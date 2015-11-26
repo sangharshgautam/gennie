@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -29,8 +30,10 @@ import org.telegram.client.param.Param;
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
 import org.telegram.client.pojo.MessageResult;
+import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
+import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
 
 import uk.co.sangharsh.client.commons.pojo.Sendable;
@@ -65,20 +68,20 @@ public class TelegramServiceImpl implements TelegramService {
 		return client.target(telegramBaseUrl+token);
 	}
 	
-	public GetMeResult getMe() {
+	public Result<User> getMe() {
 		return Method.getMe.get(webTarget(), new GenericType<GetMeResult>() {});
 	}
 
-	public MessageResult send(final Update update, final boolean addParentRef, Sendable message) {
+	public Result<Telegram> send(final Update update, final boolean addParentRef, Sendable message) {
 		return sendIn(update, addParentRef, message);
 	}
 	
 	@Override
-	public MessageResult message(final String chatId, String message) {
+	public Result<Telegram> message(final String chatId, String message) {
 		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message);
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
-	public MessageResult sendIn(final Update update, final boolean addParentRef, Sendable message) {
+	public Result<Telegram> sendIn(final Update update, final boolean addParentRef, Sendable message) {
 		final String chatId = update.getMessage().chat().getIdAsString();
 		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message.inLine());
 		if(addParentRef){
@@ -111,24 +114,24 @@ public class TelegramServiceImpl implements TelegramService {
 		return Method.sendPhoto.post(webTarget(), TelegramWrapper.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
 	}*/
 
-	public Telegram sendAudio() {
-		return Method.sendAudio.get(webTarget(), Telegram.class);
+	public Result<Telegram> sendAudio() {
+		return Method.sendAudio.get(webTarget(), new GenericType<MessageResult>() {});
 	}
 
-	public Telegram sendDocument() {
-		return Method.sendDocument.get(webTarget(), Telegram.class);
+	public Result<Telegram> sendDocument() {
+		return Method.sendDocument.get(webTarget(), new GenericType<MessageResult>() {});
 	}
 
-	public Telegram sendSticker() {
-		return Method.sendSticker.get(webTarget(), Telegram.class);
+	public Result<Telegram> sendSticker() {
+		return Method.sendSticker.get(webTarget(), new GenericType<MessageResult>() {});
 	}
 
-	public Telegram sendVideo() {
-		return Method.sendVideo.get(webTarget(), Telegram.class);
+	public Result<Telegram> sendVideo() {
+		return Method.sendVideo.get(webTarget(), new GenericType<MessageResult>() {});
 	}
 
-	public Telegram sendLocation() {
-		return Method.sendLocation.get(webTarget(), Telegram.class);
+	public Result<Telegram> sendLocation() {
+		return Method.sendLocation.get(webTarget(), new GenericType<MessageResult>() {});
 	}
 
 	/*public TelegramWrapper sendChatAction(final Update update, final BotMessage action) {
@@ -148,7 +151,7 @@ public class TelegramServiceImpl implements TelegramService {
 		}});
 	}
 
-	public GetUpdatesResult getUpdates() {
+	public Result<List<Update>> getUpdates() {
 		return Method.getUpdates.get(webTarget(), new GenericType<GetUpdatesResult>() {});
 	}
 

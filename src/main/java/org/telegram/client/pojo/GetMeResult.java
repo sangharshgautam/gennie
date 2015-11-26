@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GetMeResult extends AbstractResult<User> {
+public class GetMeResult extends Result<User> {
 
 	private User result;
 	

@@ -10,6 +10,7 @@ import org.telegram.client.pojo.MessageResult;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.TextReply;
 import org.telegram.client.pojo.Update;
+import org.telegram.client.type.Command;
 
 @Service
 @Transactional
@@ -52,9 +53,17 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 		for (Update update : updates) {
 			Telegram message = update.getMessage();
 			MessageResult result = null;
-			TextReply reply = TextReply.thank(message.from());
-			if("whoami".equals(message.text())){
-				reply = new TextReply(message.from().toString());
+			TextReply reply;
+			Command command = Command.valueOf(message.text().toUpperCase());
+			
+			switch (command) {
+			case WHOAMI:
+				reply =  new TextReply(message.from().toString());
+				break;
+			case UNKNOWN:
+			default:
+				reply = TextReply.thank(message.from());
+				break;
 			}
 			result = telegramService.send(update, false, reply);
 			if(result.isOk()){

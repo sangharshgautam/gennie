@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class GetUpdatesResult extends AbstractResult<List<Update>> {
+public class GetUpdatesResult extends Result<List<Update>> {
 
 	private List<Update> result;
 	

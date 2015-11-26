@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public abstract class AbstractResult<T> {
+public abstract class Result<T> {
 	private boolean ok;
 	public boolean isOk() {
 		return ok;
