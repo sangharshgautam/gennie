@@ -1,7 +1,7 @@
 package org.telegram.client.type;
 
 import org.telegram.client.pojo.Telegram;
-import org.telegram.client.pojo.TextReply;
+import org.telegram.client.pojo.SendableText;
 
 public enum Command {
 	UNKNOWN,

@@ -1,5 +1,7 @@
 package uk.co.sangharsh.service;
 
+import static org.glassfish.jersey.media.multipart.FormDataContentDisposition.name;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -76,43 +78,39 @@ public class TelegramServiceImpl implements TelegramService {
 	public Result<User> getMe() {
 		return Method.getMe.get(webTarget(), new GenericType<GetMeResult>() {});
 	}
-
-	public Result<Telegram> send(final Telegram telegram, final boolean addParentRef, Sendable message) {
-		return sendIn(telegram, addParentRef, message);
-	}
 	
 	@Override
-	public Result<Telegram> message(final String chatId, String message) {
-		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message);
+	public Result<Telegram> message(final String chatId, Sendable sendable) {
+		Form form = new Form()
+			.param(Param.CHAT_ID.getVal(),chatId)
+			.param(Param.TEXT.getVal(), sendable.inLine())
+			;
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
-	public Result<Telegram> sendIn(final Telegram telegram, final boolean addParentRef, Sendable message) {
+	@Override
+	public Result<Telegram> reply(final Telegram telegram, Sendable sendable) {
 		final String chatId = telegram.chat().getIdAsString();
-		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message.inLine());
-		if(addParentRef){
-			form = setParamToForm(Param.REPLY_TO_MESSAGE_ID, telegram.getIdAsString(), form);
-		}
+		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId)
+			.param(Param.TEXT.getVal(), sendable.inLine())
+			.param(Param.REPLY_TO_MESSAGE_ID.getVal(), telegram.getIdAsString())
+			;
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
-	private Form setParamToForm(Param param , String value, Form form) {
-		return form.param(param.getVal(), value);
-	}
-
-	public MessageResult forwardMessage(final String chatId, String messageId, String message) {
+	public MessageResult forwardMessage(final String chatId, String messageId, Sendable sendable) {
 		Form form = new Form()
 			.param(Param.CHAT_ID.getVal(),chatId)
 			.param(Param.FROM_CHAT_ID.getVal(),AdminResource.ADMIN_CHAT_ID)
 			.param(Param.MESSAGE_ID.getVal(), messageId)
-			.param(Param.TEXT.getVal(), message)
+			.param(Param.TEXT.getVal(), sendable.inLine())
 			;
 		return Method.forwardMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
-	public Result<Telegram> sendPhoto(final Update update, File file) {
-		final String chatId = update.getMessage().chat().getIdAsString();
+	public Result<Telegram> sendPhoto(final Telegram telegram, File file) {
+		final String chatId = telegram.chat().getIdAsString();
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file);
-		fileDataBodyPart.setContentDisposition(FormDataContentDisposition.name(Param.PHOTO.getVal()).fileName(file.getName()).build());
+		fileDataBodyPart.setContentDisposition(name(Param.PHOTO.getVal()).fileName(file.getName()).build());
 
 		final MultiPart multiPartEntity = new FormDataMultiPart()
 			.field(Param.CHAT_ID.getVal(),chatId)
@@ -122,8 +120,8 @@ public class TelegramServiceImpl implements TelegramService {
 		return Method.sendPhoto.post(webTarget(), MessageResult.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
 	}
 
-	public Result<Telegram> sendAudio(final Update update, File file) {
-		final String chatId = update.getMessage().chat().getIdAsString();
+	public Result<Telegram> sendAudio(final Telegram telegram, File file) {
+		final String chatId = telegram.chat().getIdAsString();
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file);
 		fileDataBodyPart.setContentDisposition(FormDataContentDisposition.name(Param.AUDIO.getVal()).fileName(file.getName()).build());
 
