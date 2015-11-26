@@ -4,8 +4,8 @@ import java.net.MalformedURLException;
 
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
-import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.MessageResult;
+import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.UserProfilePhotos;
 
@@ -13,7 +13,7 @@ import uk.co.sangharsh.client.commons.pojo.Sendable;
 
 public interface TelegramService {
 	GetMeResult getMe();
-    Telegram forwardMessage();
+	MessageResult forwardMessage(String chatId, String messageId, String message);
 //    TelegramWrapper sendPhoto(final Update update, File file);
     Telegram sendAudio();
     Telegram sendDocument();

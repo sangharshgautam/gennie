@@ -34,6 +34,7 @@ import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.UserProfilePhotos;
 
 import uk.co.sangharsh.client.commons.pojo.Sendable;
+import uk.co.sangharsh.ws.resource.AdminResource;
 
 @Service
 public class TelegramServiceImpl implements TelegramService {
@@ -71,6 +72,7 @@ public class TelegramServiceImpl implements TelegramService {
 	public MessageResult send(final Update update, final boolean addParentRef, Sendable message) {
 		return sendIn(update, addParentRef, message);
 	}
+	
 	@Override
 	public MessageResult message(final String chatId, String message) {
 		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message);
@@ -89,8 +91,14 @@ public class TelegramServiceImpl implements TelegramService {
 		return form.param(param.getVal(), value);
 	}
 
-	public Telegram forwardMessage() {
-		return Method.forwardMessage.get(webTarget(), Telegram.class);
+	public MessageResult forwardMessage(final String chatId, String messageId, String message) {
+		Form form = new Form()
+			.param(Param.CHAT_ID.getVal(),chatId)
+			.param(Param.FROM_CHAT_ID.getVal(),AdminResource.ADMIN_CHAT_ID)
+			.param(Param.MESSAGE_ID.getVal(), messageId)
+			.param(Param.TEXT.getVal(), message)
+			;
+		return Method.forwardMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
 	/*public TelegramWrapper sendPhoto(final Update update, File file) {

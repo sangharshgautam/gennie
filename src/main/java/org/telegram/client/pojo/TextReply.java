@@ -18,5 +18,8 @@ public class TextReply implements Sendable {
 	public String inLine() {
 		return this.text;
 	}
+	public static TextReply thank(User user) {
+		return new TextReply(user.firstname()+" Thanks for connecting! Gennie will be back soon!");
+	}
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.client.pojo.GetUpdatesResult;
+import org.telegram.client.pojo.MessageResult;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.TextReply;
 import org.telegram.client.pojo.Update;
@@ -50,12 +51,15 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 		List<Update> updates = updateService.findUnprocessed();
 		for (Update update : updates) {
 			Telegram message = update.getMessage();
+			MessageResult result = null;
+			TextReply reply = TextReply.thank(message.from());
 			if("whoami".equals(message.text())){
-				telegramService.send(update, false, new TextReply(message.from().toString()));
-			}else{
-				telegramService.send(update, false, new TextReply(message.from().firstname()+" Thanks for connecting! Gennie will be back soon!"));
+				reply = new TextReply(message.from().toString());
+				result = telegramService.send(update, false, reply);
 			}
-			updateService.update(update.markProcessed());
+			if(result.isOk()){
+				updateService.update(update.markProcessed());
+			}
 		}
 	}
 }

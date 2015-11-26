@@ -1,6 +1,7 @@
 package uk.co.sangharsh.ws.resource;
 
 import static javax.ws.rs.core.Response.status;
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.OK;
 
 import javax.ws.rs.Consumes;
@@ -39,9 +40,14 @@ public class TelegramResource {
 		return result.getResult();
 	}
 	
+	@GET
 	@Path("message/{tgUserId}")
 	public Response message(@PathParam("tgUserId") String tgUserId, @QueryParam("msg") String message){
-		telegramService.message(tgUserId, message);
-		return status(OK).build();	
+		if(telegramService.message(tgUserId, message).isOk()){
+			return status(OK).build();	
+		}else{
+			return status(INTERNAL_SERVER_ERROR).build();	
+		}
+			
 	}
 }

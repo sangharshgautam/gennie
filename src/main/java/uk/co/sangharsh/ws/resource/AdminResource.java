@@ -23,7 +23,7 @@ public class AdminResource {
 	public static final String ROOT = "admin";
 	private static final String NOTIFY = "notify";
 
-	final String ADMIN_CHAT_ID = "120340564";
+	public static final String ADMIN_CHAT_ID = "120340564";
 
 	@Autowired
 	private TelegramService telegramService;
