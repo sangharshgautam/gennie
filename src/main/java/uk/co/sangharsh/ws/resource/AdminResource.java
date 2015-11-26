@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.client.pojo.MessageResult;
+import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 
 import uk.co.sangharsh.service.TelegramService;
@@ -31,14 +31,14 @@ public class AdminResource {
 	@GET
 	@Path("message/{chatId}")
 	public Telegram getMe(@PathParam("chatId") String chatId, @QueryParam("msg") String message) {
-		MessageResult result = telegramService.message(chatId, message);
+		Result<Telegram> result = telegramService.message(chatId, message);
 		return result.getResult();
 	}
 
 	@GET
 	@Path(NOTIFY)
 	public Telegram getMe(@QueryParam("msg") String message) {
-		MessageResult result = telegramService.message(ADMIN_CHAT_ID, message);
+		Result<Telegram> result = telegramService.message(ADMIN_CHAT_ID, message);
 		return result.getResult();
 	}
 }

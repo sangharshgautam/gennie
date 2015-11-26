@@ -1,5 +1,6 @@
 package uk.co.sangharsh.service;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -21,7 +22,11 @@ import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -72,8 +77,8 @@ public class TelegramServiceImpl implements TelegramService {
 		return Method.getMe.get(webTarget(), new GenericType<GetMeResult>() {});
 	}
 
-	public Result<Telegram> send(final Update update, final boolean addParentRef, Sendable message) {
-		return sendIn(update, addParentRef, message);
+	public Result<Telegram> send(final Telegram telegram, final boolean addParentRef, Sendable message) {
+		return sendIn(telegram, addParentRef, message);
 	}
 	
 	@Override
@@ -81,11 +86,11 @@ public class TelegramServiceImpl implements TelegramService {
 		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message);
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
-	public Result<Telegram> sendIn(final Update update, final boolean addParentRef, Sendable message) {
-		final String chatId = update.getMessage().chat().getIdAsString();
+	public Result<Telegram> sendIn(final Telegram telegram, final boolean addParentRef, Sendable message) {
+		final String chatId = telegram.chat().getIdAsString();
 		Form form = new Form().param(Param.CHAT_ID.getVal(),chatId).param(Param.TEXT.getVal(), message.inLine());
 		if(addParentRef){
-			form = setParamToForm(Param.REPLY_TO_MESSAGE_ID, update.getMessage().getIdAsString(), form);
+			form = setParamToForm(Param.REPLY_TO_MESSAGE_ID, telegram.getIdAsString(), form);
 		}
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
@@ -104,18 +109,33 @@ public class TelegramServiceImpl implements TelegramService {
 		return Method.forwardMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
-	/*public TelegramWrapper sendPhoto(final Update update, File file) {
+	public Result<Telegram> sendPhoto(final Update update, File file) {
 		final String chatId = update.getMessage().chat().getIdAsString();
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file);
 		fileDataBodyPart.setContentDisposition(FormDataContentDisposition.name(Param.PHOTO.getVal()).fileName(file.getName()).build());
 
-		final MultiPart multiPartEntity = new FormDataMultiPart().field(Param.CHAT_ID.getVal(),chatId).field(Param.REPLY_MARKUP.getVal(), ReplyKeyboardMarkup.getReplyMarkup(TeleCommand.GIPHY).asJson()).bodyPart(fileDataBodyPart);
+		final MultiPart multiPartEntity = new FormDataMultiPart()
+			.field(Param.CHAT_ID.getVal(),chatId)
+//			.field(Param.REPLY_MARKUP.getVal(), ReplyKeyboardMarkup.getReplyMarkup(TeleCommand.GIPHY).asJson())
+			.bodyPart(fileDataBodyPart);
 		
-		return Method.sendPhoto.post(webTarget(), TelegramWrapper.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
-	}*/
+		return Method.sendPhoto.post(webTarget(), MessageResult.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
+	}
 
-	public Result<Telegram> sendAudio() {
-		return Method.sendAudio.get(webTarget(), new GenericType<MessageResult>() {});
+	public Result<Telegram> sendAudio(final Update update, File file) {
+		final String chatId = update.getMessage().chat().getIdAsString();
+		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file);
+		fileDataBodyPart.setContentDisposition(FormDataContentDisposition.name(Param.AUDIO.getVal()).fileName(file.getName()).build());
+
+		final MultiPart multiPartEntity = new FormDataMultiPart()
+			.field(Param.CHAT_ID.getVal(), chatId)
+			.field(Param.DURATION.getVal(), "10") //Duration of the audio in seconds
+			.field(Param.PERFORMER.getVal(), "Sonu Nigam") //Performer
+			.field(Param.TITLE.getVal(), "Track name")//Track name
+//			.field(Param.REPLY_TO_MESSAGE_ID, value)
+//			.field(Param.REPLY_MARKUP.getVal(), ReplyKeyboardMarkup.getReplyMarkup(TeleCommand.GIPHY).asJson())
+			.bodyPart(fileDataBodyPart);
+		return Method.sendAudio.post(webTarget(), MessageResult.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
 	}
 
 	public Result<Telegram> sendDocument() {

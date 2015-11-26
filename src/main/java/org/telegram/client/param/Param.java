@@ -12,7 +12,11 @@ public enum Param {
 	REPLY_TO_MESSAGE_ID,
 	REPLY_MARKUP,
 	PHOTO,
-	ACTION;
+	ACTION,
+	AUDIO,
+	DURATION,
+	PERFORMER,
+	TITLE;
 	
 	public String getVal(){
 		return this.toString().toLowerCase();

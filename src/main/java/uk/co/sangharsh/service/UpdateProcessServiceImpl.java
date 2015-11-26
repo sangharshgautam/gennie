@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.client.pojo.GetUpdatesResult;
-import org.telegram.client.pojo.MessageResult;
+import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.TextReply;
 import org.telegram.client.pojo.Update;
@@ -24,7 +23,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 
 	@Override
 	public void pullUpdates() {
-		GetUpdatesResult result = telegramService.getUpdates();
+		Result<List<Update>> result = telegramService.getUpdates();
 		if (result.isOk()) {
 			pushUpdates(result.getResult());
 		}
@@ -52,7 +51,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 		List<Update> updates = updateService.findUnprocessed();
 		for (Update update : updates) {
 			Telegram message = update.getMessage();
-			MessageResult result = null;
+			Result<Telegram> result = null;
 			TextReply reply;
 			Command command = Command.valueOf(message.text().toUpperCase());
 			
@@ -65,7 +64,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				reply = TextReply.thank(message.from());
 				break;
 			}
-			result = telegramService.send(update, false, reply);
+			result = telegramService.send(update.getMessage(), false, reply);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}

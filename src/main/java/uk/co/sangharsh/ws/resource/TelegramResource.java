@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.client.pojo.GetMeResult;
+import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.User;
 
 import uk.co.sangharsh.service.TelegramService;
@@ -36,7 +36,7 @@ public class TelegramResource {
 	@GET
 	@Path(GET_ME)
 	public User getMe() {
-		GetMeResult result = telegramService.getMe();
+		Result<User> result = telegramService.getMe();
 		return result.getResult();
 	}
 	

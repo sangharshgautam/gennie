@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.client.pojo.GetUpdatesResult;
+import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Update;
 
 import uk.co.sangharsh.service.TelegramService;
@@ -46,7 +46,7 @@ public class TelegramUpdateResource {
 	@GET
 	@Path(FETCH_UPDATES)
 	public List<Update> getUpdated(){
-		GetUpdatesResult result = telegramService.getUpdates();
+		Result<List<Update>> result = telegramService.getUpdates();
 		return result.getResult();
 	}
 	
