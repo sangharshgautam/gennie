@@ -1,0 +1,5 @@
+#!/bin/bash
+ cd /var/lib/openshift/5641f4152d52719591000048/app-root/repo
+ echo "Checking Dvla, please wait..."
+ mvn exec:java -Dexec.mainClass="uk.gov.direct.driverpracticaltest.CheckTestDate"
+ echo "Dvla check completed"
