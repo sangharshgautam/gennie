@@ -53,7 +53,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			Telegram message = update.getMessage();
 			Result<Telegram> result = null;
 			SendableText reply;
-			Command command = Command.valueOf(message.text().toUpperCase());
+			Command command = Command.lookup(message.text().toUpperCase());
 			
 			switch (command) {
 			case WHOAMI:
