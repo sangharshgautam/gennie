@@ -1,7 +1,6 @@
 package uk.gov.direct.driverpracticaltest;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -41,14 +39,11 @@ public class CheckTestDate {
 		CheckTestDate test = new CheckTestDate();
 		try {
 			test.run();
-		} catch (ClientProtocolException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			String encoded = URLEncoder.encode(e.getMessage());
+			Jsoup.connect("https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded);
+		} 
 	}
 
 	private void run() throws ClientProtocolException, IOException, ParseException {
