@@ -41,7 +41,11 @@ public class CheckTestDate {
 			test.run();
 		} catch (Exception e) {
 			e.printStackTrace();
-			String encoded = URLEncoder.encode(e.getMessage());
+			String msg = e.getMessage();
+			if(msg == null){
+				msg = e.toString();
+			}
+			String encoded = URLEncoder.encode(msg);
 			Jsoup.connect("https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded);
 		} 
 	}
