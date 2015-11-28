@@ -62,22 +62,18 @@ public class CheckTestDate {
 		String html4 = post(client, params2(), formSubmitUrl, "test4.html");
 
 		Elements slots = parse(html4, "section#availability-results ul.button-board li a span");
-		boolean slotFound = false;
-		for (Element slot : slots) {
-			String slotDateStr = slot.text();
-			System.out.println(slotDateStr);
-			Date slotDate = format.parse(slotDateStr);
-			if(slotDate.before(currentBookingDate)){
-				String msg = "NEW Slot found "+ slotDateStr;
-				slotFound = true;
-				String encoded = URLEncoder.encode(msg);
-				get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded, "nofile");
-			}
+		Element slot = slots.get(0);
+		String slotDateStr = slot.text();
+		System.out.println(slotDateStr);
+		Date slotDate = format.parse(slotDateStr);
+		String msg = "NO EARLY SLOT. + Earliest is "+slotDate;
+		if(slotDate.before(currentBookingDate)){
+			msg = "NEW Slot found "+ slotDateStr;
 		}
-		if(!slotFound){
-			String encoded = URLEncoder.encode("NO SLOT");
-			get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded, "nofile");
-		}
+		String encoded = URLEncoder.encode(msg);
+		get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded, "nofile");
+		get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/151865631?msg="+encoded, "nofile");
+		
 		get(client, MANAGE_URL, "test5.html");
 		String signOutLink = ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
 		System.out.println("SIGNOUT");
