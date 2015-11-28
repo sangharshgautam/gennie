@@ -66,13 +66,12 @@ public class CheckTestDate {
 		String slotDateStr = slot.text();
 		System.out.println(slotDateStr);
 		Date slotDate = format.parse(slotDateStr);
-		String msg = "NO EARLY SLOT. + Earliest is "+slotDate;
 		if(slotDate.before(currentBookingDate)){
-			msg = "NEW Slot found "+ slotDateStr;
+			String msg = "NEW Slot found "+ slotDateStr;
+			String encoded = URLEncoder.encode(msg);
+			get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded, "nofile");
+			get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/151865631?msg="+encoded, "nofile");
 		}
-		String encoded = URLEncoder.encode(msg);
-		get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded, "nofile");
-		get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/151865631?msg="+encoded, "nofile");
 		
 		get(client, MANAGE_URL, "test5.html");
 		String signOutLink = ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
