@@ -40,7 +40,7 @@ public class CheckTestDate {
 		try {
 			test.run();
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			String msg = e.getMessage();
 			if(msg == null){
 				msg = e.toString();
