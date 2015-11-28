@@ -21,19 +21,22 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class CheckTestDate {
+	private static final String GENNIE_FINNLER_RHCLOUD_COM_API = "https://gennie-finnler.rhcloud.com/api";
+
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0";
 
 	private static final SimpleDateFormat format = new SimpleDateFormat("EEEE d MMMM yyyy HH:mmaaa");
 	
-	private static final String ROOT = "https://driverpracticaltest.direct.gov.uk";
+	private static final String DVSA_ROOT = "https://driverpracticaltest.direct.gov.uk";
 
-	private static final String MANAGE_URL = ROOT + "/manage";
+	private static final String MANAGE_URL = DVSA_ROOT + "/manage";
 
 	public static void main(String[] args) {
 		CheckTestDate test = new CheckTestDate();
@@ -46,39 +49,50 @@ public class CheckTestDate {
 				msg = e.toString();
 			}
 			String encoded = URLEncoder.encode(msg);
-			Jsoup.connect("https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded);
-		} 
+			Jsoup.connect(GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/120340564?msg="+encoded);
+		} finally{
+			
+		}
 	}
 
 	private void run() throws ClientProtocolException, IOException, ParseException {
 		HttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
 		String html = get(client, MANAGE_URL, "test1.html");
-		String html2 = post(client, params(), ROOT + "/login", "test2.html");
+		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html");
 		String currBookingDateStr = parse(html2, "section#confirm-booking-details.formatting section div.contents dl dd").get(0)
 				.text();
 		Date currentBookingDate = format.parse(currBookingDateStr);
 		System.out.println(currBookingDateStr);
-		String changeTimeLink = ROOT + parse(html2, "a#date-time-change.button").get(0).attr("href");
+		String changeTimeLink = DVSA_ROOT + parse(html2, "a#date-time-change.button").first().attr("href");
 		System.out.println("CHNGE TIME ");
 		String html3 = get(client, changeTimeLink, "test3.html");
 
-		String formSubmitUrl = ROOT + parse(html3, "div#main section form").get(0).attr("action");
+		String formSubmitUrl = DVSA_ROOT + parse(html3, "div#main section form").first().attr("action");
 		String html4 = post(client, params2(), formSubmitUrl, "test4.html");
 
-		Elements slots = parse(html4, "section#availability-results ul.button-board li a span");
-		Element slot = slots.get(0);
-		String slotDateStr = slot.text();
+		Elements slots = parse(html4, "section#availability-results ul.button-board li a");
+		Element slotLink = slots.first();
+		Element slotSpan = slotLink.select("span").first();
+		String slotDateStr = slotSpan.text();
 		System.out.println(slotDateStr);
 		Date slotDate = format.parse(slotDateStr);
 		if(slotDate.before(currentBookingDate)){
 			String msg = "NEW Slot found "+ slotDateStr;
 			String encoded = URLEncoder.encode(msg);
-			get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/120340564?msg="+encoded, "nofile");
-			get(client, "https://gennie-finnler.rhcloud.com/api/telegram/message/151865631?msg="+encoded, "nofile");
+			get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/120340564?msg="+encoded, "nofile");
+			get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/151865631?msg="+encoded, "nofile");
+			DateTime dt = new DateTime().withYear(2015).withMonthOfYear(12).withDayOfMonth(5).withTime(0, 0, 0, 0);
+			if(slotDate.before(dt.toDate())){
+				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html");
+				Element iAmCandiate = parse(book1, "a#i-am-candidate.button.cta").first();
+				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html");
+				get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/120340564?msg=Slot%20Booked", "nofile");
+				get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/151865631?msg=Slot%20Booked", "nofile");
+			}
 		}
 		
 		get(client, MANAGE_URL, "test5.html");
-		String signOutLink = ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
+		String signOutLink = DVSA_ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
 		System.out.println("SIGNOUT");
 		get(client, signOutLink, "test6.html");
 	}
