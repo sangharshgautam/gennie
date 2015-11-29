@@ -18,6 +18,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
@@ -28,9 +29,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class CheckTestDate {
-	private static final String GENNIE_FINNLER_RHCLOUD_COM_API = "https://gennie-finnler.rhcloud.com/api";
+	private static final String USER_AGENT_PARAM = "User-Agent";
 
-	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0";
+	private static final String GENNIE_API = "https://gennie-finnler.rhcloud.com/api";
+
+	private static final String USER_AGENT_MOZILLA = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0";
 
 	private static final SimpleDateFormat format = new SimpleDateFormat("EEEE d MMMM yyyy HH:mmaaa");
 	
@@ -49,7 +52,7 @@ public class CheckTestDate {
 				msg = e.toString();
 			}
 			String encoded = URLEncoder.encode(msg);
-			Jsoup.connect(GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/120340564?msg="+encoded);
+			Jsoup.connect(GENNIE_API + "/telegram/message/120340564?msg="+encoded);
 		} finally{
 			
 		}
@@ -79,15 +82,15 @@ public class CheckTestDate {
 		if(slotDate.before(currentBookingDate)){
 			String msg = "NEW Slot found "+ slotDateStr;
 			String encoded = URLEncoder.encode(msg);
-			get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/120340564?msg="+encoded, "nofile");
-			get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/151865631?msg="+encoded, "nofile");
+			get(client, GENNIE_API + "/telegram/message/120340564?msg="+encoded, "nofile");
+			get(client, GENNIE_API + "/telegram/message/151865631?msg="+encoded, "nofile");
 			DateTime dt = new DateTime().withYear(2015).withMonthOfYear(12).withDayOfMonth(5).withTime(0, 0, 0, 0);
 			if(slotDate.before(dt.toDate())){
 				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html");
 				Element iAmCandiate = parse(book1, "a#i-am-candidate.button.cta").first();
 				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html");
-				get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/120340564?msg=Slot%20Booked", "nofile");
-				get(client, GENNIE_FINNLER_RHCLOUD_COM_API + "/telegram/message/151865631?msg=Slot%20Booked", "nofile");
+				get(client, GENNIE_API + "/telegram/message/120340564?msg=Slot%20Booked", "nofile");
+				get(client, GENNIE_API + "/telegram/message/151865631?msg=Slot%20Booked", "nofile");
 			}
 		}
 		
@@ -119,24 +122,23 @@ public class CheckTestDate {
 	private String post(HttpClient client, List<NameValuePair> urlParameters, String url, String fileName)
 			throws UnsupportedEncodingException, IOException, ClientProtocolException {
 		HttpPost post = new HttpPost(url);
-
 		// add header
-		post.setHeader("User-Agent", USER_AGENT);
-
+		post.setHeader(USER_AGENT_PARAM, USER_AGENT_MOZILLA);
 		post.setEntity(new UrlEncodedFormEntity(urlParameters));
-		HttpResponse response = client.execute(post);
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		String html = getContent(response);
-		writeResponse(html, fileName);
-		return html;
+		return executeReq(client, fileName, post);
 	}
 
-	private static String get(HttpClient client, String url, String fileName)
+	private String get(HttpClient client, String url, String fileName)
 			throws IOException, ClientProtocolException {
 		HttpGet request = new HttpGet(url);
 
 		// add request header
-		request.addHeader("User-Agent", USER_AGENT);
+		request.addHeader(USER_AGENT_PARAM, USER_AGENT_MOZILLA);
+		return executeReq(client, fileName, request);
+	}
+
+	private <T extends HttpRequestBase> String executeReq(HttpClient client, String fileName,
+			T request) throws IOException, ClientProtocolException {
 		HttpResponse response = client.execute(request);
 
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
@@ -145,11 +147,11 @@ public class CheckTestDate {
 		return html;
 	}
 
-	private static void writeResponse(String html, String name) throws IOException {
+	private void writeResponse(String html, String name) throws IOException {
 //		FileUtils.writeStringToFile(new File(name), html);
 	}
 
-	private static String getContent(HttpResponse response) throws IOException {
+	private String getContent(HttpResponse response) throws IOException {
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 		StringBuffer result = new StringBuffer();
