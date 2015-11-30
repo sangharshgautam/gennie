@@ -44,7 +44,7 @@ public class TelegramServiceImpl implements TelegramService {
 	private Result<Telegram> message(String chatId, Sendable sendable, String telegramId) {
 		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable);
 		if(response.isOk()){
-			telegramDao.create(response.getResult());
+			//telegramDao.create(response.getResult());
 		}
 		return response;
 	}
