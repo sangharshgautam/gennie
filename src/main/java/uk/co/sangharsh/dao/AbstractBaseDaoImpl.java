@@ -27,8 +27,11 @@ public abstract class AbstractBaseDaoImpl<T> implements Dao<T>{
 	public T findBy(int id) {
 		return (T)getSessionFactory().get(clazz, id);
 	}
-
 	
+	@Override
+	public T findBy(String id) {
+		return (T)getSessionFactory().get(clazz, id);
+	}
 
 	@Override
 	public void update(T entity) {

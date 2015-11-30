@@ -2,11 +2,6 @@ package uk.co.sangharsh.ws.resource;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
-import java.util.List;
-
-import javax.ws.rs.core.GenericType;
-
-import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 import org.testng.annotations.Test;
 

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.SendableText;
+import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.User;
 
 import uk.co.sangharsh.service.TelegramService;
@@ -44,7 +45,8 @@ public class TelegramResource {
 	@GET
 	@Path("message/{tgUserId}")
 	public Response message(@PathParam("tgUserId") String tgUserId, @QueryParam("msg") String message){
-		if(telegramService.message(tgUserId, SendableText.create(message)).isOk()){
+		Result<Telegram> response = telegramService.message(tgUserId, SendableText.create(message));
+		if(response.isOk()){
 			return status(OK).build();	
 		}else{
 			return status(INTERNAL_SERVER_ERROR).build();	
