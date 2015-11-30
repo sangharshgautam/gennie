@@ -16,7 +16,8 @@ public enum Param {
 	AUDIO,
 	DURATION,
 	PERFORMER,
-	TITLE;
+	TITLE, 
+	USER_ID;
 	
 	public String getVal(){
 		return this.toString().toLowerCase();

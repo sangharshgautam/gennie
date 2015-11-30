@@ -23,9 +23,8 @@ public interface TelegramClient {
 	Result<Telegram> sendVideo();
 	Result<Telegram> sendLocation();
 	Result<Boolean> sendChatAction(final Telegram telegram, ChatAction action);
-    UserProfilePhotos getUserProfilePhotos(Update update);
+	Result<UserProfilePhotos> getUserProfilePhotos(Update update);
     Result<List<Update>> getUpdates();
     void setWebhook(final String webhook) throws MalformedURLException;
-//    TelegramWrapper send(Update update, boolean addParentRef, Sendable sendable, ReplyKeyboard replyKeyboard);
     Result<Telegram> sendMessage(final String chatId, final String replyToId, Sendable sendable);
 }

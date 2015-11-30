@@ -9,6 +9,7 @@ import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.SendableText;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
+import org.telegram.client.pojo.User;
 import org.telegram.client.type.ChatAction;
 import org.telegram.client.type.Command;
 
@@ -55,13 +56,14 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			Result<Telegram> result = null;
 			SendableText reply;
 			Command command = Command.lookup(message.text().toUpperCase());
+			User from = message.from();
 			switch (command) {
 			case WHOAMI:
-				reply =  SendableText.create(message.from().toString());
+				reply =  SendableText.create(from.toString());
 				break;
 			case UNKNOWN:
 			default:
-				reply = SendableText.thank(message.from());
+				reply = SendableText.thank(from);
 				break;
 			}
 			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);

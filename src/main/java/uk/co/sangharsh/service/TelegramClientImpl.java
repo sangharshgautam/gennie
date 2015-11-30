@@ -37,6 +37,7 @@ import org.telegram.client.param.Param;
 import org.telegram.client.pojo.BooleanResult;
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
+import org.telegram.client.pojo.GetUserProfilePhotosResult;
 import org.telegram.client.pojo.MessageResult;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
@@ -156,10 +157,10 @@ public class TelegramClientImpl implements TelegramClient {
 		}});
 	}
 
-	public UserProfilePhotos getUserProfilePhotos(Update update) {
+	public Result<UserProfilePhotos> getUserProfilePhotos(Update update) {
 		final String chatId = update.getMessage().chat().getIdAsString();
-		return Method.getUserProfilePhotos.get(webTarget(), UserProfilePhotos.class, new HashMap<Param, String>(){{
-			put(Param.CHAT_ID, chatId);
+		return Method.getUserProfilePhotos.get(webTarget(), GetUserProfilePhotosResult.class, new HashMap<Param, String>(){{
+			put(Param.USER_ID, chatId);
 //			put(Param.LIMIT, "2");
 		}});
 	}
