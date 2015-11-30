@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.client.method.Method;
 import org.telegram.client.param.Param;
+import org.telegram.client.pojo.BooleanResult;
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
 import org.telegram.client.pojo.MessageResult;
@@ -42,6 +43,7 @@ import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
+import org.telegram.client.type.ChatAction;
 
 import uk.co.sangharsh.client.commons.pojo.Sendable;
 import uk.co.sangharsh.ws.resource.AdminResource;
@@ -146,14 +148,13 @@ public class TelegramClientImpl implements TelegramClient {
 		return Method.sendLocation.get(webTarget(), new GenericType<MessageResult>() {});
 	}
 
-	/*public TelegramWrapper sendChatAction(final Update update, final BotMessage action) {
-		final String chatId = update.getMessage().chat().getIdAsString();
-		return Method.sendChatAction.get(webTarget(), TelegramWrapper.class, new HashMap<Param, String>(){{
+	public Result<Boolean> sendChatAction(final Telegram telegram, final ChatAction action) {
+		final String chatId = telegram.chat().getIdAsString();
+		return Method.sendChatAction.get(webTarget(), BooleanResult.class, new HashMap<Param, String>(){{
 			put(Param.CHAT_ID, chatId);
-			put(Param.ACTION, action.inLine());
+			put(Param.ACTION, action.toString().toLowerCase());
 		}});
-		
-	}*/
+	}
 
 	public UserProfilePhotos getUserProfilePhotos(Update update) {
 		final String chatId = update.getMessage().chat().getIdAsString();

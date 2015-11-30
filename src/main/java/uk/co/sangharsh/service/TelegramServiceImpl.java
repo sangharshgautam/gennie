@@ -9,6 +9,7 @@ import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
+import org.telegram.client.type.ChatAction;
 
 import uk.co.sangharsh.client.commons.pojo.Sendable;
 import uk.co.sangharsh.dao.TelegramDao;
@@ -52,6 +53,11 @@ public class TelegramServiceImpl implements TelegramService {
 	@Override
 	public Result<List<Update>> getUpdates() {
 		return telegramClient.getUpdates();
+	}
+
+	@Override
+	public Result<Boolean> setStatus(Telegram telegram, ChatAction action) {
+		return telegramClient.sendChatAction(telegram, action);
 	}
 	
 }

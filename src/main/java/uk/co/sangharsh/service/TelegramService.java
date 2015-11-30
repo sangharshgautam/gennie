@@ -6,6 +6,7 @@ import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
+import org.telegram.client.type.ChatAction;
 
 import uk.co.sangharsh.client.commons.pojo.Sendable;
 
@@ -18,5 +19,7 @@ public interface TelegramService {
 	Result<User> getMe();
 
 	Result<List<Update>> getUpdates();
+
+	Result<Boolean> setStatus(Telegram telegram, ChatAction action);
 
 }

@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.client.pojo.Result;
-import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.SendableText;
+import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
+import org.telegram.client.type.ChatAction;
 import org.telegram.client.type.Command;
 
 @Service
@@ -54,7 +55,6 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			Result<Telegram> result = null;
 			SendableText reply;
 			Command command = Command.lookup(message.text().toUpperCase());
-			
 			switch (command) {
 			case WHOAMI:
 				reply =  SendableText.create(message.from().toString());
@@ -64,7 +64,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				reply = SendableText.thank(message.from());
 				break;
 			}
-			result = telegramService.reply(update.getMessage(), reply);
+			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);
+			result = telegramService.reply(message, reply);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}

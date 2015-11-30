@@ -9,6 +9,7 @@ import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
+import org.telegram.client.type.ChatAction;
 
 import uk.co.sangharsh.client.commons.pojo.Sendable;
 
@@ -21,7 +22,7 @@ public interface TelegramClient {
 	Result<Telegram> sendSticker();
 	Result<Telegram> sendVideo();
 	Result<Telegram> sendLocation();
-//    TelegramWrapper sendChatAction(Update update, BotMessage action);
+	Result<Boolean> sendChatAction(final Telegram telegram, ChatAction action);
     UserProfilePhotos getUserProfilePhotos(Update update);
     Result<List<Update>> getUpdates();
     void setWebhook(final String webhook) throws MalformedURLException;
