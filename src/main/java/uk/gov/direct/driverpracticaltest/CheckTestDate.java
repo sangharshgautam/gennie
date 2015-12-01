@@ -60,11 +60,11 @@ public class CheckTestDate {
 
 	private void run() throws ClientProtocolException, IOException, ParseException {
 		HttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
-		String html = get(client, MANAGE_URL, "test1.html", true);
+		String html = get(client, MANAGE_URL, "test1.html", false);
 		if(checkCaptcha(html)){
 			return;
 		}
-		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", true);
+		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", false);
 		
 		if(checkCaptcha(html2)){
 			return;
