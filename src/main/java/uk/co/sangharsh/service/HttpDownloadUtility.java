@@ -41,7 +41,7 @@ public class HttpDownloadUtility {
 			// opens input stream from the HTTP connection
 			InputStream inputStream = httpConn.getInputStream();
 
-			File temp = File.createTempFile("captcha", ""+System.currentTimeMillis());
+			File temp = File.createTempFile("captcha", ""+System.currentTimeMillis()+".jpg");
 			// opens an output stream to save into file
 			FileOutputStream outputStream = new FileOutputStream(temp);
 
