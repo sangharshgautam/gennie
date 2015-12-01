@@ -1,6 +1,7 @@
 package uk.gov.direct.driverpracticaltest;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -154,7 +156,8 @@ public class CheckTestDate {
 	}
 
 	private void writeResponse(String html, String name) throws IOException {
-//		FileUtils.writeStringToFile(new File(name), html);
+		System.out.println(html);
+		//FileUtils.writeStringToFile(new File(name), html);
 	}
 
 	private String getContent(HttpResponse response) throws IOException {
