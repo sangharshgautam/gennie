@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
+import org.telegram.client.pojo.TgFile;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
@@ -27,4 +28,5 @@ public interface TelegramClient {
     Result<List<Update>> getUpdates();
     void setWebhook(final String webhook) throws MalformedURLException;
     Result<Telegram> sendMessage(final String chatId, final String replyToId, Sendable sendable);
+    Result<TgFile> getFile(String fileId);
 }

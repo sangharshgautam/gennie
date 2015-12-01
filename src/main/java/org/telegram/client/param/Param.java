@@ -17,7 +17,8 @@ public enum Param {
 	DURATION,
 	PERFORMER,
 	TITLE, 
-	USER_ID;
+	USER_ID,
+	FILE_ID;
 	
 	public String getVal(){
 		return this.toString().toLowerCase();

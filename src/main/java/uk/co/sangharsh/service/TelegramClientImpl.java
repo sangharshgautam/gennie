@@ -35,12 +35,14 @@ import org.springframework.stereotype.Service;
 import org.telegram.client.method.Method;
 import org.telegram.client.param.Param;
 import org.telegram.client.pojo.BooleanResult;
+import org.telegram.client.pojo.GetFileResult;
 import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
 import org.telegram.client.pojo.GetUserProfilePhotosResult;
 import org.telegram.client.pojo.MessageResult;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
+import org.telegram.client.pojo.TgFile;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
@@ -193,7 +195,12 @@ public class TelegramClientImpl implements TelegramClient {
 		}
 		
 	}
-
+	@Override
+	public Result<TgFile> getFile(final String fileId) {
+		return Method.setWebhook.get(webTarget(), GetFileResult.class, new HashMap<Param, String>(){{
+			put(Param.FILE_ID, fileId);
+		}});
+	}
 	private boolean validateProtocol(URL url) {
 		return url.getProtocol().equalsIgnoreCase("https");
 	}
@@ -202,4 +209,6 @@ public class TelegramClientImpl implements TelegramClient {
 		int[] validPorts = new int[]{443, 80, 88, 8443};
 		return Arrays.asList(validPorts).contains(url.getPort());
 	}
+
+	
 }

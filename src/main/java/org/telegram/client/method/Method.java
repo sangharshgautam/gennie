@@ -22,7 +22,8 @@ public enum Method {
     sendChatAction,
     getUserProfilePhotos,
     getUpdates,
-    setWebhook;
+    setWebhook,
+    getFile;
     
 	public <T> T get(WebTarget webtarget, Class<T> clazz) {
 		return webtarget.path(this.toString()).request().get(clazz);

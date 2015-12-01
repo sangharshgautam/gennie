@@ -82,15 +82,17 @@ public class CheckTestDate {
 		if(slotDate.before(currentBookingDate)){
 			String msg = "NEW Slot found "+ slotDateStr;
 			String encoded = URLEncoder.encode(msg);
-			get(client, GENNIE_API + "/telegram/message/120340564?msg="+encoded, "nofile");
-			get(client, GENNIE_API + "/telegram/message/151865631?msg="+encoded, "nofile");
 			DateTime dt = new DateTime().withYear(2015).withMonthOfYear(12).withDayOfMonth(5).withTime(0, 0, 0, 0);
 			if(slotDate.before(dt.toDate())){
 				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html");
 				Element iAmCandiate = parse(book1, "a#i-am-candidate.button.cta").first();
 				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html");
-				get(client, GENNIE_API + "/telegram/message/120340564?msg=Slot%20Booked", "nofile");
-				get(client, GENNIE_API + "/telegram/message/151865631?msg=Slot%20Booked", "nofile");
+				encoded = URLEncoder.encode("Slot Booked");
+				triggerMessage(client, "120340564" , encoded);
+				triggerMessage(client, "151865631" , encoded);
+			}else{
+				triggerMessage(client, "120340564" , encoded);
+				triggerMessage(client, "151865631" , encoded);
 			}
 		}
 		
@@ -98,6 +100,10 @@ public class CheckTestDate {
 		String signOutLink = DVSA_ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
 		System.out.println("SIGNOUT");
 		get(client, signOutLink, "test6.html");
+	}
+
+	private String triggerMessage(HttpClient client, String tgUserId, String encoded) throws IOException, ClientProtocolException {
+		return get(client, GENNIE_API + "/telegram/message/"+tgUserId+"?msg="+encoded, "nofile");
 	}
 
 	private List<NameValuePair> params2() {
