@@ -1,7 +1,6 @@
 package uk.gov.direct.driverpracticaltest;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -64,8 +62,14 @@ public class CheckTestDate {
 		HttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
 		String html = get(client, MANAGE_URL, "test1.html");
 		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html");
-		String currBookingDateStr = parse(html2, "section#confirm-booking-details.formatting section div.contents dl dd").get(0)
-				.text();
+		
+		Elements captchas = parse(html2, "div#recaptcha-check script");
+		if(!captchas.isEmpty()){
+			Element captcha = captchas.first();
+			System.out.println(captcha.html());
+			return;
+		}
+		String currBookingDateStr = parse(html2, "section#confirm-booking-details.formatting section div.contents dl dd").first().text();
 		Date currentBookingDate = format.parse(currBookingDateStr);
 		System.out.println(currBookingDateStr);
 		String changeTimeLink = DVSA_ROOT + parse(html2, "a#date-time-change.button").first().attr("href");
@@ -156,7 +160,7 @@ public class CheckTestDate {
 	}
 
 	private void writeResponse(String html, String name) throws IOException {
-		System.out.println(html);
+//		System.out.println(html);
 		//FileUtils.writeStringToFile(new File(name), html);
 	}
 
