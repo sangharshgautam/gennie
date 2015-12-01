@@ -60,13 +60,13 @@ public class CheckTestDate {
 
 	private void run() throws ClientProtocolException, IOException, ParseException {
 		HttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
-		String html = get(client, MANAGE_URL, "test1.html", false);
+		String html = get(client, MANAGE_URL, "test1.html", true);
+		if(checkCaptcha(html)){
+			return;
+		}
 		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", true);
 		
-		Elements captchas = parse(html2, "div#recaptcha-check script");
-		if(!captchas.isEmpty()){
-			Element captcha = captchas.first();
-			System.out.println(captcha.html());
+		if(checkCaptcha(html2)){
 			return;
 		}
 		String currBookingDateStr = parse(html2, "section#confirm-booking-details.formatting section div.contents dl dd").first().text();
@@ -106,6 +106,16 @@ public class CheckTestDate {
 		String signOutLink = DVSA_ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
 		System.out.println("SIGNOUT");
 		get(client, signOutLink, "test6.html", false);
+	}
+
+	private boolean checkCaptcha(String html2) {
+		Elements captchas = parse(html2, "div#recaptcha-check script");
+		if(!captchas.isEmpty()){
+			Element captcha = captchas.first();
+			System.out.println(captcha.html());
+			return true;
+		}
+		return false;
 	}
 
 	private String triggerMessage(HttpClient client, String tgUserId, String encoded) throws IOException, ClientProtocolException {
