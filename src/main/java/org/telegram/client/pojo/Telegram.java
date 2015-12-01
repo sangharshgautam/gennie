@@ -41,7 +41,7 @@ public class Telegram extends Identifiable{
 
 	@XmlElement(name="message_id", required = true)
 	@Id 
-	private int id;
+	private int id = 0;
 	
 	@XmlElement(required = true)
 	@ManyToOne
