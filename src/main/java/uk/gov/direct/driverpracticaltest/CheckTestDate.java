@@ -113,8 +113,10 @@ public class CheckTestDate {
 		if(!captchas.isEmpty()){
 			Element captcha = captchas.first();
 			String scriptSrc = captcha.attr("src");
-			System.out.println(scriptSrc);
-			get(client, scriptSrc, "captcha.html", true);
+			String content = get(client, scriptSrc, "captcha.html", true);
+			int start = content.indexOf("'");
+			String challenge = content.substring(start+1,content.indexOf("'", start+1));
+			System.out.println("CHALLENGE-->"+challenge);
 			return true;
 		}
 		return false;
