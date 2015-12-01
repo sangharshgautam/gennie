@@ -14,6 +14,6 @@ public class TelegramDaoImpl extends  AbstractBaseDaoImpl<Telegram> implements T
 	}
 	@Override
 	public List<Telegram> findByReplyTo(int replyToId) {
-		return (List<Telegram>)getSessionFactory().createCriteria(Telegram.class).add(Restrictions.eq("replyToMessage", replyToId)).list();
+		return (List<Telegram>)getSessionFactory().createCriteria(Telegram.class).add(Restrictions.eq("replyToMessage.id", replyToId)).list();
 	}
 }
