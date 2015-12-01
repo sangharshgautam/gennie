@@ -60,8 +60,8 @@ public class CheckTestDate {
 
 	private void run() throws ClientProtocolException, IOException, ParseException {
 		HttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
-		String html = get(client, MANAGE_URL, "test1.html");
-		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html");
+		String html = get(client, MANAGE_URL, "test1.html", false);
+		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", true);
 		
 		Elements captchas = parse(html2, "div#recaptcha-check script");
 		if(!captchas.isEmpty()){
@@ -74,10 +74,10 @@ public class CheckTestDate {
 		System.out.println(currBookingDateStr);
 		String changeTimeLink = DVSA_ROOT + parse(html2, "a#date-time-change.button").first().attr("href");
 		System.out.println("CHNGE TIME ");
-		String html3 = get(client, changeTimeLink, "test3.html");
+		String html3 = get(client, changeTimeLink, "test3.html", false);
 
 		String formSubmitUrl = DVSA_ROOT + parse(html3, "div#main section form").first().attr("action");
-		String html4 = post(client, params2(), formSubmitUrl, "test4.html");
+		String html4 = post(client, params2(), formSubmitUrl, "test4.html", false);
 
 		Elements slots = parse(html4, "section#availability-results ul.button-board li a");
 		Element slotLink = slots.first();
@@ -90,9 +90,9 @@ public class CheckTestDate {
 			String encoded = URLEncoder.encode(msg);
 			DateTime dt = new DateTime().withYear(2015).withMonthOfYear(12).withDayOfMonth(5).withTime(0, 0, 0, 0);
 			if(slotDate.before(dt.toDate())){
-				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html");
+				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html", false);
 				Element iAmCandiate = parse(book1, "a#i-am-candidate.button.cta").first();
-				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html");
+				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html", false);
 				encoded = URLEncoder.encode("Slot Booked");
 				triggerMessage(client, "120340564" , encoded);
 				triggerMessage(client, "151865631" , encoded);
@@ -102,14 +102,14 @@ public class CheckTestDate {
 			}
 		}
 		
-		get(client, MANAGE_URL, "test5.html");
+		get(client, MANAGE_URL, "test5.html", false);
 		String signOutLink = DVSA_ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
 		System.out.println("SIGNOUT");
-		get(client, signOutLink, "test6.html");
+		get(client, signOutLink, "test6.html", false);
 	}
 
 	private String triggerMessage(HttpClient client, String tgUserId, String encoded) throws IOException, ClientProtocolException {
-		return get(client, GENNIE_API + "/telegram/message/"+tgUserId+"?msg="+encoded, "nofile");
+		return get(client, GENNIE_API + "/telegram/message/"+tgUserId+"?msg="+encoded, "nofile", false);
 	}
 
 	private List<NameValuePair> params2() {
@@ -131,30 +131,33 @@ public class CheckTestDate {
 		return params;
 	}
 
-	private String post(HttpClient client, List<NameValuePair> urlParameters, String url, String fileName)
+	private String post(HttpClient client, List<NameValuePair> urlParameters, String url, String fileName, boolean print)
 			throws UnsupportedEncodingException, IOException, ClientProtocolException {
 		HttpPost post = new HttpPost(url);
 		// add header
 		post.setHeader(USER_AGENT_PARAM, USER_AGENT_MOZILLA);
 		post.setEntity(new UrlEncodedFormEntity(urlParameters));
-		return executeReq(client, fileName, post);
+		return executeReq(client, fileName, post, print);
 	}
 
-	private String get(HttpClient client, String url, String fileName)
+	private String get(HttpClient client, String url, String fileName, boolean print)
 			throws IOException, ClientProtocolException {
 		HttpGet request = new HttpGet(url);
 
 		// add request header
 		request.addHeader(USER_AGENT_PARAM, USER_AGENT_MOZILLA);
-		return executeReq(client, fileName, request);
+		return executeReq(client, fileName, request, print);
 	}
 
 	private <T extends HttpRequestBase> String executeReq(HttpClient client, String fileName,
-			T request) throws IOException, ClientProtocolException {
+			T request, boolean print) throws IOException, ClientProtocolException {
 		HttpResponse response = client.execute(request);
 
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 		String html = getContent(response);
+		if(print){
+			System.out.println(html);
+		}
 		writeResponse(html, fileName);
 		return html;
 	}
