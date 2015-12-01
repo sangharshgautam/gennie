@@ -3,7 +3,6 @@ package uk.co.sangharsh.service;
 import java.util.List;
 
 import org.telegram.client.pojo.Result;
-import org.telegram.client.pojo.SendableText;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
@@ -23,6 +22,6 @@ public interface TelegramService {
 
 	Result<Boolean> setStatus(Telegram telegram, ChatAction action);
 
-	Result<Telegram> photo(String tgUserId, String url);
+	Telegram photo(String tgUserId, String url);
 
 }

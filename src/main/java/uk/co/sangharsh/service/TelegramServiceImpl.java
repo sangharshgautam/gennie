@@ -2,6 +2,7 @@ package uk.co.sangharsh.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +64,27 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	public Result<Telegram> photo(String tgUserId, String url) {
+	public Telegram photo(String tgUserId, String url) {
 		try {
 //			File file = FileUtils.toFile(new URL(url));
 			File file = HttpDownloadUtility.downloadFile(url);
-			return telegramClient.sendPhoto(tgUserId, file);
+			Result<Telegram> response = telegramClient.sendPhoto(tgUserId, file);
+			if(response.isOk()){
+				telegramDao.create(response.getResult());
+				List<Telegram> replies = new ArrayList<Telegram>();
+				int count =0;
+				do {
+					replies = telegramDao.findByReplyTo(response.getResult().getId());
+					if(!replies.isEmpty()){
+						return replies.get(0);
+					}
+					Thread.currentThread().sleep(3000);
+					count++;	
+				} while (replies.isEmpty() || count >15);
+			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		return null;
