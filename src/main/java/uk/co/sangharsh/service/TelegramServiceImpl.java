@@ -18,6 +18,7 @@ import uk.co.sangharsh.client.commons.pojo.Sendable;
 import uk.co.sangharsh.dao.TelegramDao;
 
 @Service
+@Transactional
 public class TelegramServiceImpl implements TelegramService {
 
 	@Autowired
@@ -32,7 +33,6 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	@Transactional
 	public Result<Telegram> message(String chatId, Sendable sendable) {
 		String telegramId = null;
 		return message(chatId, sendable, telegramId);
@@ -64,7 +64,6 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	@Transactional
 	public Telegram photo(String tgUserId, String url) {
 		try {
 //			File file = FileUtils.toFile(new URL(url));
