@@ -64,6 +64,7 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
+	@Transactional
 	public Telegram photo(String tgUserId, String url) {
 		try {
 //			File file = FileUtils.toFile(new URL(url));
