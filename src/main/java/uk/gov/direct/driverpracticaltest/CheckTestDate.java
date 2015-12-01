@@ -61,12 +61,12 @@ public class CheckTestDate {
 	private void run() throws ClientProtocolException, IOException, ParseException {
 		HttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
 		String html = get(client, MANAGE_URL, "test1.html", false);
-		if(checkCaptcha(html)){
+		if(checkCaptcha(client, html)){
 			return;
 		}
 		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", true);
 		
-		if(checkCaptcha(html2)){
+		if(checkCaptcha(client, html2)){
 			return;
 		}
 		String currBookingDateStr = parse(html2, "section#confirm-booking-details.formatting section div.contents dl dd").first().text();
@@ -108,12 +108,13 @@ public class CheckTestDate {
 		get(client, signOutLink, "test6.html", false);
 	}
 
-	private boolean checkCaptcha(String html2) {
+	private boolean checkCaptcha(HttpClient client, String html2) throws ClientProtocolException, IOException {
 		Elements captchas = parse(html2, "div#recaptcha-check script");
 		if(!captchas.isEmpty()){
 			Element captcha = captchas.first();
-			System.out.println(captcha.toString());
-			System.out.println(captcha.attr("src"));
+			String scriptSrc = captcha.attr("src");
+			System.out.println(scriptSrc);
+			get(client, scriptSrc, "captcha.html", true);
 			return true;
 		}
 		return false;
