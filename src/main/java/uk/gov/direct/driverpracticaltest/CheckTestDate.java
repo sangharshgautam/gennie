@@ -64,7 +64,7 @@ public class CheckTestDate {
 		if(checkCaptcha(html)){
 			return;
 		}
-		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", false);
+		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", true);
 		
 		if(checkCaptcha(html2)){
 			return;
@@ -112,7 +112,8 @@ public class CheckTestDate {
 		Elements captchas = parse(html2, "div#recaptcha-check script");
 		if(!captchas.isEmpty()){
 			Element captcha = captchas.first();
-			System.out.println(captcha.html());
+			System.out.println(captcha.toString());
+			System.out.println(captcha.attr("src"));
 			return true;
 		}
 		return false;
