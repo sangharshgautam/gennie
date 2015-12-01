@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.telegram.client.adpater.UnixDateTimeAdapter;
 
 @XmlRootElement
@@ -92,6 +94,7 @@ public class Telegram extends Identifiable{
 	@ManyToMany
 	@JoinTable(name = "TG_MESSAGE_MEDIA")
 	@JoinColumn(name = "TG_MEDIA_ID")
+	@Cascade(CascadeType.ALL)
 	private List<PhotoSize> photo;
 	
 	@XmlElement(name="new_chat_participant")
