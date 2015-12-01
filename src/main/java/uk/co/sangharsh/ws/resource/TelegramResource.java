@@ -44,8 +44,32 @@ public class TelegramResource {
 	
 	@GET
 	@Path("message/{tgUserId}")
-	public Response message(@PathParam("tgUserId") String tgUserId, @QueryParam("msg") String message){
+	public Response sendMessage(@PathParam("tgUserId") String tgUserId, @QueryParam("msg") String message){
 		Result<Telegram> response = telegramService.message(tgUserId, SendableText.create(message));
+		if(response.isOk()){
+			return status(OK).build();	
+		}else{
+			return status(INTERNAL_SERVER_ERROR).build();	
+		}
+			
+	}
+	@GET
+	@Path("file/{tgUserId}")
+	public Response sendFile(@PathParam("tgUserId") String tgUserId, @QueryParam("url") String url){
+		Result<Telegram> response = telegramService.photo(tgUserId, url);
+		if(response.isOk()){
+			return status(OK).build();	
+		}else{
+			return status(INTERNAL_SERVER_ERROR).build();	
+		}
+			
+	}
+	
+	@GET
+	@Path("captcha/{tgUserId}")
+	public Response captcha(@PathParam("tgUserId") String tgUserId, @QueryParam("challenge") String challenge){
+		String url = new StringBuilder("http://www.google.com/recaptcha/api/image?c=").append(challenge).toString();
+		Result<Telegram> response = telegramService.photo(tgUserId, url);
 		if(response.isOk()){
 			return status(OK).build();	
 		}else{

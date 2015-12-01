@@ -106,8 +106,7 @@ public class TelegramClientImpl implements TelegramClient {
 		return Method.forwardMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
-	public Result<Telegram> sendPhoto(final Telegram telegram, File file) {
-		final String chatId = telegram.chat().getIdAsString();
+	@Override	public Result<Telegram> sendPhoto(final String chatId, File file) {
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file);
 		fileDataBodyPart.setContentDisposition(name(Param.PHOTO.getVal()).fileName(file.getName()).build());
 

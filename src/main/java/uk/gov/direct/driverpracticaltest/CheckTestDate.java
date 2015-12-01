@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -113,10 +115,11 @@ public class CheckTestDate {
 		if(!captchas.isEmpty()){
 			Element captcha = captchas.first();
 			String scriptSrc = captcha.attr("src");
-			String content = get(client, scriptSrc, "captcha.html", true);
+			String content = get(client, scriptSrc, "captcha.html", false);
 			int start = content.indexOf("'");
 			String challenge = content.substring(start+1,content.indexOf("'", start+1));
 			System.out.println("CHALLENGE-->"+challenge);
+			get(client, GENNIE_API + "/telegram/captcha/120340564?challenge="+challenge, "nofile", false);
 			return true;
 		}
 		return false;
