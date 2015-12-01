@@ -159,10 +159,9 @@ public class TelegramClientImpl implements TelegramClient {
 		}});
 	}
 
-	public Result<UserProfilePhotos> getUserProfilePhotos(Update update) {
-		final String chatId = update.getMessage().chat().getIdAsString();
+	public Result<UserProfilePhotos> getUserProfilePhotos(final String tgUserId) {
 		return Method.getUserProfilePhotos.get(webTarget(), GetUserProfilePhotosResult.class, new HashMap<Param, String>(){{
-			put(Param.USER_ID, chatId);
+			put(Param.USER_ID, tgUserId);
 //			put(Param.LIMIT, "2");
 		}});
 	}
