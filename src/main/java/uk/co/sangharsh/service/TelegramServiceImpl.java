@@ -1,11 +1,9 @@
 package uk.co.sangharsh.service;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,9 +65,10 @@ public class TelegramServiceImpl implements TelegramService {
 	@Override
 	public Result<Telegram> photo(String tgUserId, String url) {
 		try {
-			File file = FileUtils.toFile(new URL(url));
+//			File file = FileUtils.toFile(new URL(url));
+			File file = HttpDownloadUtility.downloadFile(url);
 			return telegramClient.sendPhoto(tgUserId, file);
-		} catch (MalformedURLException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;

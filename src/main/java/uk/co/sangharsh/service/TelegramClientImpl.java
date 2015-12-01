@@ -108,11 +108,7 @@ public class TelegramClientImpl implements TelegramClient {
 
 	@Override	public Result<Telegram> sendPhoto(final String chatId, File file) {
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file, MediaType.APPLICATION_OCTET_STREAM_TYPE);
-		String name = file.getName();
-		if(StringUtils.isBlank(name)){
-			name =  "image";
-		}
-		fileDataBodyPart.setContentDisposition(name(Param.PHOTO.getVal()).fileName(name).build());
+		fileDataBodyPart.setContentDisposition(name(Param.PHOTO.getVal()).fileName(file.getName()).build());
 
 		final MultiPart multiPartEntity = new FormDataMultiPart()
 			.field(Param.CHAT_ID.getVal(),chatId)
