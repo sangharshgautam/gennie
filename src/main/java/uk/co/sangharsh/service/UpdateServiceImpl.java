@@ -11,6 +11,7 @@ import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 
 import uk.co.sangharsh.dao.Dao;
+import uk.co.sangharsh.dao.TelegramDao;
 import uk.co.sangharsh.dao.UpdateDao;
 
 @Service
@@ -31,6 +32,9 @@ public class UpdateServiceImpl extends AsbtractServiceImpl<Update> implements Up
 	@Autowired
 	private PhotoSizeService photoSizeService;
 	
+	@Autowired
+	private TelegramDao telegramDao;
+	
 	@Override
     public void create(Update update) {
 		Telegram message = update.getMessage();
@@ -45,6 +49,10 @@ public class UpdateServiceImpl extends AsbtractServiceImpl<Update> implements Up
 		List<PhotoSize> photo = message.photo();
 		if (photo != null) {
 			photoSizeService.mergeAll(photo);
+		}
+		Telegram replyToMessage = message.replyToMessage();
+		if(replyToMessage != null){
+			telegramDao.merge(replyToMessage);
 		}
 		userService.merge(message.from());
 		chatService.merge(message.chat());

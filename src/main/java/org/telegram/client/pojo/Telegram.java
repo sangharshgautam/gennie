@@ -164,5 +164,9 @@ public class Telegram extends Identifiable{
 	public List<PhotoSize> photo() {
 		return photo;
 	}
+
+	public Telegram replyToMessage() {
+		return replyToMessage;
+	}
 	
 }
