@@ -58,11 +58,11 @@
 		<stanford.nlp.version>3.5.0</stanford.nlp.version>
 	</properties>
 	<dependencies>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.2-1003-jdbc4</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -174,12 +174,12 @@
 		    <groupId>joda-time</groupId>
 		    <artifactId>joda-time</artifactId>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 	      <groupId>javax.transaction</groupId>
 	      <artifactId>jta</artifactId>
 	      <version>1.1</version>
-	  	</dependency> -->
-		<!-- <dependency>
+	  	</dependency>
+		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 		    <artifactId>stanford-corenlp</artifactId>
 		    <version>${stanford.nlp.version}</version>
@@ -189,7 +189,7 @@
 			<artifactId>stanford-corenlp</artifactId>
 			<version>${stanford.nlp.version}</version>
 			<classifier>models</classifier>
-		</dependency> -->
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 	  	<dependencies>
