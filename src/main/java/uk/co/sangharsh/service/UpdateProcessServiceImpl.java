@@ -23,8 +23,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	@Autowired
 	private UpdateService updateService;
 	
-	@Autowired
-	private SentimentAnalyzingService sentimentAnalyzingService;
+	/*@Autowired
+	private SentimentAnalyzingService sentimentAnalyzingService;*/
 
 	@Override
 	public void pullUpdates() {
@@ -66,9 +66,9 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			case UNKNOWN:
 			default:
-				int sentiment = sentimentAnalyzingService.findSentiment(message.text());
-				reply = SendableText.create("Sentiment-> "+sentiment);
-				//reply = SendableText.thank(from);
+//				int sentiment = sentimentAnalyzingService.findSentiment(message.text());
+//				reply = SendableText.create("Sentiment-> "+sentiment);
+				reply = SendableText.thank(from);
 				break;
 			}
 			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);

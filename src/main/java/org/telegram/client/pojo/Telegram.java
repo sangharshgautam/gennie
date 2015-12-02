@@ -69,8 +69,9 @@ public class Telegram extends Identifiable{
 	private Date forwardDate;
 	
 	@XmlElement(name="reply_to_message")
-	@ManyToOne
-	@JoinColumn(name= "TG_REPLY_TO_MESSAGE_ID")
+	/*@ManyToOne
+	@JoinColumn(name= "TG_REPLY_TO_MESSAGE_ID")*/
+	@Transient
 	private Telegram replyToMessage;
 	
 	@XmlElement

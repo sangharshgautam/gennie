@@ -1,4 +1,4 @@
-package uk.co.sangharsh.service;
+/*package uk.co.sangharsh.service;
 
 import java.util.Properties;
 
@@ -47,3 +47,4 @@ public class SentimentAnalyzingServiceImpl implements SentimentAnalyzingService 
 	}
 
 }
+*/
