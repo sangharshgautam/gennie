@@ -59,7 +59,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 		for (Update update : updates) {
 			Telegram message = update.getMessage();
 			Result<Telegram> result = null;
-			SendableText reply;
+			SendableText reply = null;
 			ReplyKeyboardMarkup markup = null;
 			List<List<String>> keyboard;
 			Command command = Command.lookup(message.text().toUpperCase());
