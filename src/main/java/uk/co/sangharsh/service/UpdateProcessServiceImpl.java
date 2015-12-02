@@ -3,6 +3,7 @@ package uk.co.sangharsh.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,42 +97,67 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				reply = SendableText.create("Enter your move");
 				keyboard = new ArrayList<List<String>>(){{
 					add(new ArrayList<String>(){{
-						add("1");
-						add("2");
-						add("3");
+						add("X1");
+						add("X2");
+						add("X3");
 					}});
 					add(new ArrayList<String>(){{
-						add("4");
-						add("5");
-						add("6");
+						add("X4");
+						add("X5");
+						add("X6");
 					}});
 					add(new ArrayList<String>(){{
-						add("7");
-						add("8");
-						add("9");
+						add("X7");
+						add("X8");
+						add("X9");
 					}});
 					add(new ArrayList<String>(){{
 						add(Command.QUIT.toString());
 					}});
 				}};
+				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;
 			case O:
 				reply = SendableText.create("Enter your move");
 				keyboard = new ArrayList<List<String>>(){{
 					add(new ArrayList<String>(){{
-						add("1");
-						add("2");
-						add("3");
+						add("O1");
+						add("O2");
+						add("O3");
 					}});
 					add(new ArrayList<String>(){{
-						add("4");
-						add("5");
-						add("6");
+						add("O4");
+						add("O5");
+						add("O6");
 					}});
 					add(new ArrayList<String>(){{
-						add("7");
-						add("8");
-						add("9");
+						add("O7");
+						add("O8");
+						add("O9");
+					}});
+					add(new ArrayList<String>(){{
+						add(Command.QUIT.toString());
+					}});
+				}};
+				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				break;
+			case O1:
+				reply = SendableText.create("Enter your move");
+				keyboard = new ArrayList<List<String>>(){{
+					add(new ArrayList<String>(){{
+						add(StringUtils.EMPTY);
+						add("O2");
+						add("O3");
+					}});
+					add(new ArrayList<String>(){{
+						add("O4");
+						add("O5");
+						add("O6");
+					}});
+					add(new ArrayList<String>(){{
+						add("O7");
+						add("O8");
+						add("O9");
 					}});
 					add(new ArrayList<String>(){{
 						add(Command.QUIT.toString());
