@@ -172,7 +172,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			}
 			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);
-			result = telegramService.reply(message, reply, markup);
+			result = telegramService.message(message.chat().getIdAsString(), reply, markup);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}
