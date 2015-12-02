@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.client.pojo.ReplyKeyboardMarkup;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
@@ -46,7 +47,8 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 	
 	private Result<Telegram> message(String chatId, Sendable sendable, String telegramId) {
-		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable);
+		String[][] keyboard =  new String[][]{{"A", "B", "C"}, {"D", "E", "F"}};
+		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable, ReplyKeyboardMarkup.selective(keyboard).oneTime());
 		if(response.isOk()){
 			telegramDao.create(response.getResult());
 		}

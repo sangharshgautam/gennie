@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.telegram.client.pojo.ReplyKeyboard;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.TgFile;
@@ -57,7 +58,7 @@ public interface TelegramClient {
 
 	void setWebhook(final String webhook) throws MalformedURLException;
 
-	Result<Telegram> sendMessage(final String chatId, final String replyToId, Sendable sendable);
+	Result<Telegram> sendMessage(final String chatId, final String replyToId, final Sendable sendable, final ReplyKeyboard keyboard);
 
 	/**
 	 * Use this method to get basic info about a file and prepare it for

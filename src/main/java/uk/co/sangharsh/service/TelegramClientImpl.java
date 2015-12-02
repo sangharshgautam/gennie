@@ -40,6 +40,7 @@ import org.telegram.client.pojo.GetMeResult;
 import org.telegram.client.pojo.GetUpdatesResult;
 import org.telegram.client.pojo.GetUserProfilePhotosResult;
 import org.telegram.client.pojo.MessageResult;
+import org.telegram.client.pojo.ReplyKeyboard;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.TgFile;
@@ -85,13 +86,16 @@ public class TelegramClientImpl implements TelegramClient {
 	}
 	
 	@Override
-	public Result<Telegram> sendMessage(final String chatId, final String replyToId, Sendable sendable) {
+	public Result<Telegram> sendMessage(final String chatId, final String replyToId, final Sendable sendable, final ReplyKeyboard keyboard) {
 		Form form = new Form()
 			.param(Param.CHAT_ID.getVal(),chatId)
 			.param(Param.TEXT.getVal(), sendable.inLine())
 			;
 		if(StringUtils.isNotBlank(replyToId)){
 			form.param(Param.REPLY_TO_MESSAGE_ID.getVal(), replyToId);
+		}
+		if(keyboard != null){
+			form.param(Param.REPLY_MARKUP.getVal(), keyboard.json());
 		}
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
