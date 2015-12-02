@@ -59,7 +59,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 		for (Update update : updates) {
 			Telegram message = update.getMessage();
 			Result<Telegram> result = null;
-			SendableText reply = null;
+			SendableText reply;
 			ReplyKeyboardMarkup markup = null;
 			List<List<String>> keyboard;
 			Command command = Command.lookup(message.text().toUpperCase());
@@ -93,6 +93,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;
 			case X:
+				reply = SendableText.create("Enter your move");
 				keyboard = new ArrayList<List<String>>(){{
 					List<String> hor_x = new ArrayList<String>(){{
 						add("X");
@@ -108,6 +109,20 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				}};
 				break;
 			case O:
+				reply = SendableText.create("Enter your move");
+				keyboard = new ArrayList<List<String>>(){{
+					List<String> hor_o = new ArrayList<String>(){{
+						add("O");
+						add("O");
+						add("O");
+					}};
+					add(hor_o);
+					add(hor_o);
+					add(hor_o);
+					add(new ArrayList<String>(){{
+						add(Command.QUIT.toString());
+					}});
+				}};
 				break;
 			case UNKNOWN:
 			default:
