@@ -32,14 +32,14 @@ public class AdminResource {
 	@GET
 	@Path("message/{chatId}")
 	public Telegram getMe(@PathParam("chatId") String chatId, @QueryParam("msg") String message) {
-		Result<Telegram> result = telegramService.message(chatId, SendableText.create(message));
+		Result<Telegram> result = telegramService.message(chatId, SendableText.create(message), null);
 		return result.getResult();
 	}
 
 	@GET
 	@Path(NOTIFY)
 	public Telegram getMe(@QueryParam("msg") String message) {
-		Result<Telegram> result = telegramService.message(ADMIN_CHAT_ID, SendableText.create(message));
+		Result<Telegram> result = telegramService.message(ADMIN_CHAT_ID, SendableText.create(message), null);
 		return result.getResult();
 	}
 }

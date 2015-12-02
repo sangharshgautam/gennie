@@ -45,7 +45,7 @@ public class TelegramResource {
 	@GET
 	@Path("message/{tgUserId}")
 	public Response sendMessage(@PathParam("tgUserId") String tgUserId, @QueryParam("msg") String message){
-		Result<Telegram> response = telegramService.message(tgUserId, SendableText.create(message));
+		Result<Telegram> response = telegramService.message(tgUserId, SendableText.create(message), null);
 		if(response.isOk()){
 			return status(OK).build();	
 		}else{

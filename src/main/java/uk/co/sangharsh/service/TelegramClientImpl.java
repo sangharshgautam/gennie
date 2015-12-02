@@ -90,7 +90,7 @@ public class TelegramClientImpl implements TelegramClient {
 	}
 	
 	@Override
-	public Result<Telegram> sendMessage(final String chatId, final String replyToId, final Sendable sendable, final ReplyKeyboard keyboard) {
+	public Result<Telegram> sendMessage(final String chatId, final String replyToId, final Sendable sendable, final ReplyKeyboard nmarkup) {
 		Form form = new Form()
 			.param(Param.CHAT_ID.getVal(),chatId)
 			.param(Param.TEXT.getVal(), sendable.inLine())
@@ -98,8 +98,8 @@ public class TelegramClientImpl implements TelegramClient {
 		if(StringUtils.isNotBlank(replyToId)){
 			form.param(Param.REPLY_TO_MESSAGE_ID.getVal(), replyToId);
 		}
-		if(keyboard != null){
-			form.param(Param.REPLY_MARKUP.getVal(), gson.toJson(keyboard));
+		if(nmarkup != null){
+			form.param(Param.REPLY_MARKUP.getVal(), gson.toJson(nmarkup));
 		}
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
