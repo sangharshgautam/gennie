@@ -95,14 +95,21 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case X:
 				reply = SendableText.create("Enter your move");
 				keyboard = new ArrayList<List<String>>(){{
-					List<String> hor_x = new ArrayList<String>(){{
-						add("X");
-						add("X");
-						add("X");
-					}};
-					add(hor_x);
-					add(hor_x);
-					add(hor_x);
+					add(new ArrayList<String>(){{
+						add("1");
+						add("2");
+						add("3");
+					}});
+					add(new ArrayList<String>(){{
+						add("4");
+						add("5");
+						add("6");
+					}});
+					add(new ArrayList<String>(){{
+						add("7");
+						add("8");
+						add("9");
+					}});
 					add(new ArrayList<String>(){{
 						add(Command.QUIT.toString());
 					}});
@@ -111,14 +118,21 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case O:
 				reply = SendableText.create("Enter your move");
 				keyboard = new ArrayList<List<String>>(){{
-					List<String> hor_o = new ArrayList<String>(){{
-						add("O");
-						add("O");
-						add("O");
-					}};
-					add(hor_o);
-					add(hor_o);
-					add(hor_o);
+					add(new ArrayList<String>(){{
+						add("1");
+						add("2");
+						add("3");
+					}});
+					add(new ArrayList<String>(){{
+						add("4");
+						add("5");
+						add("6");
+					}});
+					add(new ArrayList<String>(){{
+						add("7");
+						add("8");
+						add("9");
+					}});
 					add(new ArrayList<String>(){{
 						add(Command.QUIT.toString());
 					}});
