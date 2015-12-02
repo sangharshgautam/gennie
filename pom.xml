@@ -190,6 +190,11 @@
 			<version>${stanford.nlp.version}</version>
 			<classifier>models</classifier>
 		</dependency> -->
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.5</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 	  	<dependencies>

@@ -47,7 +47,14 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 	
 	private Result<Telegram> message(String chatId, Sendable sendable, String telegramId) {
-		String[][] keyboard =  new String[][]{{"A", "B", "C"}, {"D", "E", "F"}};
+		
+		final List<String> row1 = new ArrayList<String>(){{
+			add("A");
+			add("B");
+		}};
+		List<List<String>> keyboard = new ArrayList<List<String>>(){{
+			add(row1);
+		}};
 		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable, ReplyKeyboardMarkup.selective(keyboard).oneTime());
 		if(response.isOk()){
 			telegramDao.create(response.getResult());

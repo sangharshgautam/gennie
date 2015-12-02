@@ -49,6 +49,8 @@ import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
 import org.telegram.client.type.ChatAction;
 
+import com.google.gson.Gson;
+
 import uk.co.sangharsh.client.commons.pojo.Sendable;
 import uk.co.sangharsh.ws.resource.AdminResource;
 
@@ -65,6 +67,8 @@ public class TelegramClientImpl implements TelegramClient {
 	
 	
 	private Client client; 
+	
+	private static final Gson gson = new Gson();
 	
 	@PostConstruct
 	public void setClientProperties(){
@@ -95,7 +99,7 @@ public class TelegramClientImpl implements TelegramClient {
 			form.param(Param.REPLY_TO_MESSAGE_ID.getVal(), replyToId);
 		}
 		if(keyboard != null){
-			form.param(Param.REPLY_MARKUP.getVal(), keyboard.json());
+			form.param(Param.REPLY_MARKUP.getVal(), gson.toJson(keyboard));
 		}
 		return Method.sendMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}

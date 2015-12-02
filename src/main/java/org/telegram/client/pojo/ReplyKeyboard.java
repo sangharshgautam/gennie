@@ -9,13 +9,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 public abstract class ReplyKeyboard {
 	
 	private boolean selective;
+	
 	protected ReplyKeyboard(){}
 	
 	protected ReplyKeyboard(boolean selective){
 		this.selective = selective;
-	}
-	
-	public String json(){
-		return "";
 	}
 }
