@@ -34,28 +34,21 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	public Result<Telegram> message(String chatId, Sendable sendable) {
+	public Result<Telegram> message(String chatId, Sendable sendable, ReplyKeyboardMarkup markup) {
 		String telegramId = null;
-		return message(chatId, sendable, telegramId);
+		return message(chatId, sendable, telegramId, markup);
 	}
 
 	@Override
-	public Result<Telegram> reply(Telegram telegram, Sendable sendable) {
+	public Result<Telegram> reply(Telegram telegram, Sendable sendable, ReplyKeyboardMarkup markup) {
 		String chatId = telegram.chat().getIdAsString();
 		String telegramId = telegram.getIdAsString();
-		return message(chatId, sendable, telegramId);
+		return message(chatId, sendable, telegramId, markup);
 	}
 	
-	private Result<Telegram> message(String chatId, Sendable sendable, String telegramId) {
+	private Result<Telegram> message(String chatId, Sendable sendable, String telegramId, ReplyKeyboardMarkup markup) {
 		
-		final List<String> row1 = new ArrayList<String>(){{
-			add("A");
-			add("B");
-		}};
-		List<List<String>> keyboard = new ArrayList<List<String>>(){{
-			add(row1);
-		}};
-		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable, ReplyKeyboardMarkup.selective(keyboard).oneTime());
+		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable, markup);
 		if(response.isOk()){
 			telegramDao.create(response.getResult());
 		}

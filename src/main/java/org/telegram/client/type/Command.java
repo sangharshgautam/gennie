@@ -2,6 +2,11 @@ package org.telegram.client.type;
 
 public enum Command {
 	WHOAMI,
+	HI,
+	TICTACTOE,
+	X,
+	O,
+	QUIT,
 //	CAPTCHA,
 	UNKNOWN;
 	public static Command lookup(String id) {

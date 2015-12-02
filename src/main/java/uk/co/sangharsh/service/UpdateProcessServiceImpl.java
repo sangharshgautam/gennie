@@ -1,10 +1,12 @@
 package uk.co.sangharsh.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.client.pojo.ReplyKeyboardMarkup;
 import org.telegram.client.pojo.Result;
 import org.telegram.client.pojo.SendableText;
 import org.telegram.client.pojo.Telegram;
@@ -58,11 +60,54 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			Telegram message = update.getMessage();
 			Result<Telegram> result = null;
 			SendableText reply;
+			ReplyKeyboardMarkup markup = null;
+			List<List<String>> keyboard;
 			Command command = Command.lookup(message.text().toUpperCase());
 			User from = message.from();
 			switch (command) {
 			case WHOAMI:
 				reply =  SendableText.create(from.toString());
+				break;
+			case QUIT:
+				//terminate game
+			case HI:
+				reply =  SendableText.create("Select a game...");
+				keyboard = new ArrayList<List<String>>(){{
+					add(new ArrayList<String>(){{
+						add(Command.TICTACTOE.toString());
+					}});
+				}};
+				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				break;
+			case TICTACTOE:
+				reply =  SendableText.create(command.toString()+ ": Select your player ...");
+				keyboard = new ArrayList<List<String>>(){{
+					add(new ArrayList<String>(){{
+						add("X");
+						add("O");
+					}});
+					add(new ArrayList<String>(){{
+						add(Command.QUIT.toString());
+					}});
+				}};
+				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				break;
+			case X:
+				keyboard = new ArrayList<List<String>>(){{
+					List<String> hor_x = new ArrayList<String>(){{
+						add("X");
+						add("X");
+						add("X");
+					}};
+					add(hor_x);
+					add(hor_x);
+					add(hor_x);
+					add(new ArrayList<String>(){{
+						add(Command.QUIT.toString());
+					}});
+				}};
+				break;
+			case O:
 				break;
 			case UNKNOWN:
 			default:
@@ -72,7 +117,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			}
 			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);
-			result = telegramService.reply(message, reply);
+			result = telegramService.reply(message, reply, markup);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}
