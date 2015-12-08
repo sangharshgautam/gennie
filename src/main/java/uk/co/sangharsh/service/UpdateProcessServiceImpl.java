@@ -1,7 +1,9 @@
 package uk.co.sangharsh.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	
 	/*@Autowired
 	private SentimentAnalyzingService sentimentAnalyzingService;*/
+	
+	private Map<String, Game> games = new HashMap<String, Game>();
 
 	@Override
 	public void pullUpdates() {
@@ -81,6 +85,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;
 			case TICTACTOE:
+				this.games.put(from.getIdAsString(), new TicTacToe(from));
 				reply =  SendableText.create(command.toString()+ ": Select your player ...");
 				keyboard = new ArrayList<List<String>>(){{
 					add(new ArrayList<String>(){{
@@ -94,75 +99,37 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;
 			case X:
-				reply = SendableText.create("Enter your move");
-				keyboard = new ArrayList<List<String>>(){{
-					add(new ArrayList<String>(){{
-						add("X1");
-						add("X2");
-						add("X3");
-					}});
-					add(new ArrayList<String>(){{
-						add("X4");
-						add("X5");
-						add("X6");
-					}});
-					add(new ArrayList<String>(){{
-						add("X7");
-						add("X8");
-						add("X9");
-					}});
-					add(new ArrayList<String>(){{
-						add(Command.QUIT.toString());
-					}});
-				}};
-				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
-				break;
 			case O:
 				reply = SendableText.create("Enter your move");
-				keyboard = new ArrayList<List<String>>(){{
-					add(new ArrayList<String>(){{
-						add("O1");
-						add("O2");
-						add("O3");
-					}});
-					add(new ArrayList<String>(){{
-						add("O4");
-						add("O5");
-						add("O6");
-					}});
-					add(new ArrayList<String>(){{
-						add("O7");
-						add("O8");
-						add("O9");
-					}});
-					add(new ArrayList<String>(){{
-						add(Command.QUIT.toString());
-					}});
-				}};
+				Game game = this.games.get(from.getIdAsString());
+				TicTacToe ticTacToe = (TicTacToe)game;
+				keyboard = ticTacToe.keyboard(command.toString());
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;
 			case O1:
+			case O2:
+			case O3:
+			case O4:
+			case O5:
+			case O6:
+			case O7:
+			case O8:
+			case O9:
+			case X1:
+			case X2:
+			case X3:
+			case X4:
+			case X5:
+			case X6:
+			case X7:
+			case X8:
+			case X9:
 				reply = SendableText.create("Enter your move");
-				keyboard = new ArrayList<List<String>>(){{
-					add(new ArrayList<String>(){{
-						add(StringUtils.EMPTY);
-						add("O2");
-						add("O3");
-					}});
-					add(new ArrayList<String>(){{
-						add("O4");
-						add("O5");
-						add("O6");
-					}});
-					add(new ArrayList<String>(){{
-						add("O7");
-						add("O8");
-						add("O9");
-					}});
-					add(new ArrayList<String>(){{
-						add(Command.QUIT.toString());
-					}});
-				}};
+				game = this.games.get(from.getIdAsString());
+				ticTacToe = (TicTacToe)game;
+				ticTacToe.move(command.toString());
+				keyboard = ticTacToe.keyboard(command.toString());
+				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;
 			case UNKNOWN:
 			default:
