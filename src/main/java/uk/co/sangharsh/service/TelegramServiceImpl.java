@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.client.pojo.ReplyKeyboardMarkup;
 import org.telegram.client.pojo.Result;
+import org.telegram.client.pojo.SendableImage;
+import org.telegram.client.pojo.SendableText;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
 import org.telegram.client.pojo.User;
 import org.telegram.client.type.ChatAction;
 
-import uk.co.sangharsh.client.commons.pojo.Sendable;
 import uk.co.sangharsh.dao.TelegramDao;
 
 @Service
@@ -34,19 +35,26 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	public Result<Telegram> message(String chatId, Sendable sendable, ReplyKeyboardMarkup markup) {
+	public Result<Telegram> message(String chatId, SendableText sendable, ReplyKeyboardMarkup markup) {
 		String telegramId = null;
 		return message(chatId, sendable, telegramId, markup);
 	}
-
 	@Override
-	public Result<Telegram> reply(Telegram telegram, Sendable sendable, ReplyKeyboardMarkup markup) {
+	public Result<Telegram> message(String chatId, SendableImage sendable, ReplyKeyboardMarkup markup) {
+		Result<Telegram> response = telegramClient.sendPhoto(chatId, sendable.getFile(), markup);
+		if(response.isOk()){
+			telegramDao.create(response.getResult());
+		}
+		return response;
+	}
+	@Override
+	public Result<Telegram> reply(Telegram telegram, SendableText sendable, ReplyKeyboardMarkup markup) {
 		String chatId = telegram.chat().getIdAsString();
 		String telegramId = telegram.getIdAsString();
 		return message(chatId, sendable, telegramId, markup);
 	}
 	
-	private Result<Telegram> message(String chatId, Sendable sendable, String telegramId, ReplyKeyboardMarkup markup) {
+	private Result<Telegram> message(String chatId, SendableText sendable, String telegramId, ReplyKeyboardMarkup markup) {
 		
 		Result<Telegram> response = telegramClient.sendMessage(chatId, telegramId , sendable, markup);
 		if(response.isOk()){
@@ -70,7 +78,7 @@ public class TelegramServiceImpl implements TelegramService {
 		try {
 //			File file = FileUtils.toFile(new URL(url));
 			File file = HttpDownloadUtility.downloadFile(url);
-			Result<Telegram> response = telegramClient.sendPhoto(tgUserId, file);
+			Result<Telegram> response = telegramClient.sendPhoto(tgUserId, file, null);
 			if(response.isOk()){
 				telegramDao.create(response.getResult());
 				List<Telegram> replies = new ArrayList<Telegram>();

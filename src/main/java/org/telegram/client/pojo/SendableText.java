@@ -9,7 +9,7 @@ public class SendableText implements Sendable {
 	public SendableText(){
 		super();
 	}
-	private SendableText(String text) {
+	protected SendableText(String text) {
 		super();
 		this.text = text;
 	}

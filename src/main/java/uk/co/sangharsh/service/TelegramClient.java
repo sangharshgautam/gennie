@@ -20,7 +20,7 @@ public interface TelegramClient {
 
 	Result<Telegram> forwardMessage(String chatId, String messageId, Sendable sendable);
 
-	Result<Telegram> sendPhoto(final String chatId, final File file);
+	Result<Telegram> sendPhoto(final String chatId, final File file, final ReplyKeyboard nmarkup);
 
 	Result<Telegram> sendAudio(final Telegram telegram, final File file);
 

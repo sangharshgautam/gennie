@@ -49,10 +49,10 @@ import org.telegram.client.pojo.User;
 import org.telegram.client.pojo.UserProfilePhotos;
 import org.telegram.client.type.ChatAction;
 
-import com.google.gson.Gson;
-
 import uk.co.sangharsh.client.commons.pojo.Sendable;
 import uk.co.sangharsh.ws.resource.AdminResource;
+
+import com.google.gson.Gson;
 
 @Service
 public class TelegramClientImpl implements TelegramClient {
@@ -114,15 +114,16 @@ public class TelegramClientImpl implements TelegramClient {
 		return Method.forwardMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
-	@Override	public Result<Telegram> sendPhoto(final String chatId, File file) {
+	@Override	public Result<Telegram> sendPhoto(final String chatId, File file, final ReplyKeyboard nmarkup) {
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 		fileDataBodyPart.setContentDisposition(name(Param.PHOTO.getVal()).fileName(file.getName()).build());
 
-		final MultiPart multiPartEntity = new FormDataMultiPart()
-			.field(Param.CHAT_ID.getVal(),chatId)
-//			.field(Param.REPLY_MARKUP.getVal(), ReplyKeyboardMarkup.getReplyMarkup(TeleCommand.GIPHY).asJson())
-			.bodyPart(fileDataBodyPart);
-		
+		FormDataMultiPart form = new FormDataMultiPart()
+			.field(Param.CHAT_ID.getVal(),chatId);
+		if(nmarkup != null){
+			form.field(Param.REPLY_MARKUP.getVal(), gson.toJson(nmarkup));
+		}
+		final MultiPart multiPartEntity = form.bodyPart(fileDataBodyPart);
 		return Method.sendPhoto.post(webTarget(), MessageResult.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
 	}
 

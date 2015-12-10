@@ -1,16 +1,21 @@
 package uk.co.sangharsh.service;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.client.pojo.ReplyKeyboardMarkup;
 import org.telegram.client.pojo.Result;
+import org.telegram.client.pojo.SendableImage;
 import org.telegram.client.pojo.SendableText;
 import org.telegram.client.pojo.Telegram;
 import org.telegram.client.pojo.Update;
@@ -59,7 +64,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	}
 
 	@Override
-	public void process() {
+	public void process() throws IOException {
 		List<Update> updates = updateService.findUnprocessed();
 		for (Update update : updates) {
 			Telegram message = update.getMessage();
@@ -124,7 +129,11 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case X7:
 			case X8:
 			case X9:
-				reply = SendableText.create("Enter your move");
+				BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+				bi.getGraphics().drawLine(0, 0, 100, 100);
+				File tictactoe = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
+				ImageIO.write(bi, "jpg", tictactoe);
+				reply = SendableImage.create("Enter your move", tictactoe);
 				game = this.games.get(from.getIdAsString());
 				ticTacToe = (TicTacToe)game;
 				ticTacToe.move(command.toString());

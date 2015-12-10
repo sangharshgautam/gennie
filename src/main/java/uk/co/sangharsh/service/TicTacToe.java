@@ -41,7 +41,6 @@ public class TicTacToe extends TwinPlayerGame{
 		keyboard.add(new ArrayList<String>(){{
 			add(Command.QUIT.toString());
 		}});
-	
 		return keyboard;
 	}
 
