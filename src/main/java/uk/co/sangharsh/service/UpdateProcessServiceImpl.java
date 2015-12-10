@@ -129,11 +129,11 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case X7:
 			case X8:
 			case X9:
-				BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+				/*BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
 				bi.getGraphics().drawLine(0, 0, 100, 100);
 				File tictactoe = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
-				ImageIO.write(bi, "jpg", tictactoe);
-				reply = SendableImage.create("Enter your move", tictactoe);
+				ImageIO.write(bi, "jpg", tictactoe);*/
+				reply = SendableText.create("Enter your move");
 				game = this.games.get(from.getIdAsString());
 				ticTacToe = (TicTacToe)game;
 				ticTacToe.move(command.toString());
