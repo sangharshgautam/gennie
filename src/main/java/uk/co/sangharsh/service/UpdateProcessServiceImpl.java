@@ -135,15 +135,15 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case X7:
 			case X8:
 			case X9:
-				BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+				/*BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
 				Graphics graphics = bi.getGraphics();
 				graphics.setColor(Color.WHITE);
 				graphics.fillRect(0, 0, 200, 200);
 				graphics.setColor(Color.BLUE);
 				graphics.drawLine(0, 0, 100, 100);
 				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
-				ImageIO.write(bi, "jpeg", file);
-				reply = SendableImage.create("Enter your move", file);
+				ImageIO.write(bi, "jpeg", file);*/
+				reply = SendableText.create("Enter your move");
 				game = this.games.get(from.getIdAsString());
 				ticTacToe = ((TicTacToe)game).move(command.toString());
 				keyboard = ticTacToe.keyboard(command.toString());
