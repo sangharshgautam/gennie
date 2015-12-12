@@ -144,7 +144,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
 				ImageIO.write(bi, "jpeg", file);*/
 				reply = SendableText.create("Enter your move");
-				game = this.games.get(from.getIdAsString());
+				game = new TicTacToe(from);
 				ticTacToe = ((TicTacToe)game).move(command.toString());
 				keyboard = ticTacToe.keyboard(command.toString());
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
