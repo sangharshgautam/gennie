@@ -142,7 +142,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				graphics.setColor(Color.BLUE);
 				graphics.drawLine(0, 0, 100, 100);
 				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
-				ImageIO.write(bi, "jpg", file);
+				ImageIO.write(bi, "jpeg", file);
 				reply = SendableImage.create("Enter your move", file);
 				game = this.games.get(from.getIdAsString());
 				ticTacToe = ((TicTacToe)game).move(command.toString());
