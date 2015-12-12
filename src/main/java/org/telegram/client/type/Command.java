@@ -4,6 +4,7 @@ public enum Command {
 	WHOAMI,
 	HI,
 	TICTACTOE,
+	CHESS,
 	X,
 	O,
 	O1,

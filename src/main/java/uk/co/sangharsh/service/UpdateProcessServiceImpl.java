@@ -1,5 +1,7 @@
 package uk.co.sangharsh.service;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -80,11 +82,15 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			case QUIT:
 				//terminate game
+				this.games.remove(from.getIdAsString());
 			case HI:
 				reply =  SendableText.create("Select a game...");
 				keyboard = new ArrayList<List<String>>(){{
 					add(new ArrayList<String>(){{
 						add(Command.TICTACTOE.toString());
+					}});
+					add(new ArrayList<String>(){{
+						add(Command.CHESS.toString());
 					}});
 				}};
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
@@ -129,14 +135,17 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case X7:
 			case X8:
 			case X9:
-				/*BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-				bi.getGraphics().drawLine(0, 0, 100, 100);
-				File tictactoe = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
-				ImageIO.write(bi, "jpg", tictactoe);*/
-				reply = SendableText.create("Enter your move");
+				BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+				Graphics graphics = bi.getGraphics();
+				graphics.setColor(Color.WHITE);
+				graphics.fillRect(0, 0, 200, 200);
+				graphics.setColor(Color.BLUE);
+				graphics.drawLine(0, 0, 100, 100);
+				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
+				ImageIO.write(bi, "jpg", file);
+				reply = SendableImage.create("Enter your move", file);
 				game = this.games.get(from.getIdAsString());
-				ticTacToe = (TicTacToe)game;
-				ticTacToe.move(command.toString());
+				ticTacToe = ((TicTacToe)game).move(command.toString());
 				keyboard = ticTacToe.keyboard(command.toString());
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
 				break;

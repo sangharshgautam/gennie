@@ -31,7 +31,7 @@ public class TicTacToe extends TwinPlayerGame{
 			for(int j = 1; j<data.length;j++){
 				String button = data[j];
 				if(StringUtils.isBlank(button)){
-					row.add(p+((3*i)+j));
+					row.add(p+(3*i)+j);
 				}else{
 					row.add(" ");
 				}
@@ -44,7 +44,7 @@ public class TicTacToe extends TwinPlayerGame{
 		return keyboard;
 	}
 
-	public void move(String string) {
+	public TicTacToe move(String string) {
 		if(StringUtils.length(string) == 2){
 			String player = string.substring(0, 1);
 			int block = Integer.parseInt(string.substring(1, 2));
@@ -80,5 +80,6 @@ public class TicTacToe extends TwinPlayerGame{
 			}
 				
 		}
+		return this;
 	}
 }
