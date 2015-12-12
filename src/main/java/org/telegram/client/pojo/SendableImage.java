@@ -14,8 +14,8 @@ public class SendableImage extends SendableText {
 		return file;
 	}
 
-	public static SendableImage create(String text, File file) {
-		return new SendableImage(text, file);
+	public static SendableImage create(String caption, File file) {
+		return new SendableImage(caption, file);
 	}
 	
 }

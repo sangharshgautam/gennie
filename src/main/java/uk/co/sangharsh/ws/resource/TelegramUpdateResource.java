@@ -76,7 +76,8 @@ public class TelegramUpdateResource {
 		updateProcessService.push(update);
 		try {
 			updateProcessService.process();
-		} catch (IOException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			return status(INTERNAL_SERVER_ERROR).build();
 		}
 		return status(OK).build();

@@ -120,9 +120,9 @@ public class TelegramClientImpl implements TelegramClient {
 
 		FormDataMultiPart form = new FormDataMultiPart()
 			.field(Param.CHAT_ID.getVal(),chatId);
-		if(rMarkup != null){
+		/*if(rMarkup != null){
 			form.field(Param.REPLY_MARKUP.getVal(), gson.toJson(rMarkup));
-		}
+		}*/
 		final MultiPart multiPartEntity = form.bodyPart(fileDataBodyPart);
 		return Method.sendPhoto.post(webTarget(), MessageResult.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
 	}
