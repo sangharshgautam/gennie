@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.telegram.client.pojo.User;
 import org.telegram.client.type.Command;
 
+import com.google.gson.Gson;
+
 public class TicTacToe extends TwinPlayerGame{
 
 	private String[][] matrix;
@@ -28,8 +30,8 @@ public class TicTacToe extends TwinPlayerGame{
 		for(int i=0;i<matrix.length ; i++){
 			String[] data = matrix[i];
 			List<String> row = new ArrayList<String>();
-			for(int j = 1; j<data.length;j++){
-				String button = data[j];
+			for(int j = 1; j<=data.length;j++){
+				String button = data[j-1];
 				if(StringUtils.isBlank(button)){
 					row.add(p+((3*i)+j));
 				}else{
@@ -81,5 +83,11 @@ public class TicTacToe extends TwinPlayerGame{
 				
 		}
 		return this;
+	}
+	public static void main(String[] args) {
+		TicTacToe game = new TicTacToe(null);
+		System.out.println(new Gson().toJson(game.keyboardX()));
+		System.out.println(new Gson().toJson(game.move("X2").keyboardX()));
+		System.out.println(new Gson().toJson(game.move("X5").keyboardX()));
 	}
 }
