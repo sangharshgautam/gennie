@@ -1,16 +1,10 @@
 package uk.co.sangharsh.service;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,36 +129,14 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case X7:
 			case X8:
 			case X9:
-				/*BufferedImage bi = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-				Graphics graphics = bi.getGraphics();
-				graphics.setColor(Color.WHITE);
-				graphics.fillRect(0, 0, 200, 200);
-				graphics.setColor(Color.BLUE);
-				graphics.drawLine(0, 0, 100, 100);
-				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
-				ImageIO.write(bi, "jpeg", file);*/
-				reply = SendableText.create("Enter your move");
 				if(!this.games.containsKey(from.getIdAsString())){
-					game = this.games.put(from.getIdAsString(), new TicTacToe(from));
+					this.games.put(from.getIdAsString(), new TicTacToe(from));
 				}
 				game = this.games.get(from.getIdAsString());
 				ticTacToe = ((TicTacToe)game).move(command.toString());
 				keyboard = ticTacToe.keyboard(command.toString());
+				reply = ticTacToe.reply();
 				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
-				break;
-			case TEST:
-				ClassLoader classLoader = getClass().getClassLoader();
-				File file1 = new File(classLoader.getResource("tictactoe.png").getFile());
-				BufferedImage originalImg = ImageIO.read(file1);
-				BufferedImage bi = new BufferedImage(originalImg.getWidth(), originalImg.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-				Graphics graphics = bi.getGraphics();
-				graphics.setColor(Color.WHITE);
-				graphics.fillRect(0, 0, 200, 200);
-				graphics.setColor(Color.BLACK);
-				graphics.drawLine(0, 0, 200, 200);
-				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".png");
-				ImageIO.write(bi, "png", file);
-				reply = SendableImage.create("Enter your trttt", file);
 				break;
 			case UNKNOWN:
 			default:

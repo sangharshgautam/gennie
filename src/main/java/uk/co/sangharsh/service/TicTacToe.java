@@ -1,9 +1,17 @@
 package uk.co.sangharsh.service;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.lang3.StringUtils;
+import org.telegram.client.pojo.SendableImage;
 import org.telegram.client.pojo.User;
 import org.telegram.client.type.Command;
 
@@ -89,5 +97,20 @@ public class TicTacToe extends TwinPlayerGame{
 		System.out.println(new Gson().toJson(game.keyboardX()));
 		System.out.println(new Gson().toJson(game.move("X2").keyboardX()));
 		System.out.println(new Gson().toJson(game.move("X5").keyboardX()));
+	}
+
+	public SendableImage reply() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file1 = new File(classLoader.getResource("template.png").getFile());
+		BufferedImage originalImg = ImageIO.read(file1);
+		BufferedImage bi = new BufferedImage(originalImg.getWidth(), originalImg.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		Graphics graphics = bi.getGraphics();
+		graphics.setColor(Color.WHITE);
+		graphics.fillRect(0, 0, 200, 200);
+		graphics.setColor(Color.BLACK);
+		graphics.drawLine(0, 0, 200, 200);
+		File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".png");
+		ImageIO.write(bi, "png", file);
+		return SendableImage.create("Enter your move", file);
 	}
 }
