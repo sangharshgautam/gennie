@@ -164,7 +164,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				graphics.drawLine(0, 0, 200, 200);
 				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".png");
 				ImageIO.write(bi, "png", file);
-				reply = SendableImage.create("Enter your move", file);
+				reply = SendableImage.create("Enter your trttt", file);
 				break;
 			case UNKNOWN:
 			default:

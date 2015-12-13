@@ -36,11 +36,13 @@ public class TelegramServiceImpl implements TelegramService {
 
 	@Override
 	public Result<Telegram> message(String chatId, SendableText sendable, ReplyKeyboardMarkup markup) {
+		System.out.println("SendableText");
 		String telegramId = null;
 		return message(chatId, sendable, telegramId, markup);
 	}
 	@Override
 	public Result<Telegram> message(String chatId, SendableImage sendable, ReplyKeyboardMarkup markup) {
+		System.out.println("SendableImage");
 		Result<Telegram> response = telegramClient.sendPhoto(chatId, sendable.getFile(), markup);
 		if(response.isOk()){
 			telegramDao.create(response.getResult());
