@@ -154,7 +154,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			case TEST:
 				ClassLoader classLoader = getClass().getClassLoader();
-				File file1 = new File(classLoader.getResource("tictactoe.jpg").getFile());
+				File file1 = new File(classLoader.getResource("tictactoe.png").getFile());
 				BufferedImage originalImg = ImageIO.read(file1);
 				BufferedImage bi = new BufferedImage(originalImg.getWidth(), originalImg.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 				Graphics graphics = bi.getGraphics();
@@ -162,8 +162,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				graphics.fillRect(0, 0, 200, 200);
 				graphics.setColor(Color.BLACK);
 				graphics.drawLine(0, 0, 200, 200);
-				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".jpg");
-				ImageIO.write(bi, "jpeg", file);
+				File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".png");
+				ImageIO.write(bi, "png", file);
 				reply = SendableImage.create("Enter your move", file);
 				break;
 			case UNKNOWN:
