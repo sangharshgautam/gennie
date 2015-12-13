@@ -105,10 +105,7 @@ public class TicTacToe extends TwinPlayerGame{
 		BufferedImage originalImg = ImageIO.read(file1);
 		BufferedImage bi = new BufferedImage(originalImg.getWidth(), originalImg.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 		Graphics graphics = bi.getGraphics();
-		graphics.setColor(Color.WHITE);
-		graphics.fillRect(0, 0, 200, 200);
-		graphics.setColor(Color.BLACK);
-		graphics.drawLine(0, 0, 200, 200);
+		graphics.drawImage(originalImg, 0, 0, originalImg.getWidth(), originalImg.getHeight(), null);
 		File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".png");
 		ImageIO.write(bi, "png", file);
 		return SendableImage.create("Enter your move", file);
