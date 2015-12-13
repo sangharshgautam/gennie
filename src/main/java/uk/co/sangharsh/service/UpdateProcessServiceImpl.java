@@ -174,10 +174,18 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			}
 			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);
-			result = telegramService.message(message.chat().getIdAsString(), reply, markup);
+			result = msg(message, reply, markup);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}
 		}
+	}
+
+	private Result<Telegram> msg(Telegram message, SendableText reply,
+			ReplyKeyboardMarkup markup) {
+		if(reply instanceof SendableImage){
+			return telegramService.message(message.chat().getIdAsString(), (SendableImage)reply, markup);
+		}
+		return telegramService.message(message.chat().getIdAsString(), reply, markup);
 	}
 }
