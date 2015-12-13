@@ -27,6 +27,7 @@ public enum Command {
 	X9,
 	QUIT,
 //	CAPTCHA,
+	TEST,
 	UNKNOWN;
 	public static Command lookup(String id) {
         try {
