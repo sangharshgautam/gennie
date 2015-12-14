@@ -88,33 +88,41 @@ public class TicTacToe extends TwinPlayerGame{
 				break;
 			case 3:
 				this.matrix[0][2] = player;
+				this.template.getGraphics().drawImage(playerBi, 220+50, 0+100, playerBi.getWidth(), playerBi.getHeight(), null);
 				break;
 			case 4:
 				this.matrix[1][0] = player;
-				this.template.getGraphics().drawImage(playerBi, 0+50, 110+100, playerBi.getWidth(), playerBi.getHeight(), null);
+				draw(playerBi, 0+50, 110+100);
 				break;
 			case 5:
 				this.matrix[1][1] = player;
-				this.template.getGraphics().drawImage(playerBi, 220+50, 110+100, playerBi.getWidth(), playerBi.getHeight(), null);
+				draw(playerBi, 110+50, 110+100);
 				break;
 			case 6:
 				this.matrix[1][2] = player;
+				draw(playerBi, 220+50, 110+100);
 				break;
 			case 7:
 				this.matrix[2][0] = player;
-				this.template.getGraphics().drawImage(playerBi, 0+50, 220+100, playerBi.getWidth(), playerBi.getHeight(), null);
+				draw(playerBi, 0+50, 220+100);
 				break;
 			case 8:
 				this.matrix[2][1] = player;
+				draw(playerBi, 110+50, 220+100);
 				break;
 			case 9:
 				this.matrix[2][2] = player;
+				draw(playerBi, 220+50, 220+100);
 			default:
 				break;
 			}
 				
 		}
 		return this;
+	}
+
+	private void draw(BufferedImage playerBi, int x, int y) {
+		this.template.getGraphics().drawImage(playerBi, x, y, playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws IOException {
 		TicTacToe game = new TicTacToe(null);

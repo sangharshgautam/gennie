@@ -19,7 +19,15 @@ public enum Param {
 	PERFORMER,
 	TITLE, 
 	USER_ID,
-	FILE_ID;
+	FILE_ID,
+	PARSE_MODE,
+	DISABLE_WEB_PAGE_PREVIEW,
+	DOCUMENT,
+	STICKER,
+	VOICE,
+	LATITUDE,
+	LONGITUDE
+	;
 	
 	public String getVal(){
 		return this.toString().toLowerCase();
