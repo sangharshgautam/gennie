@@ -35,25 +35,25 @@ public class TelegramServiceImpl implements TelegramService {
 	}
 
 	@Override
-	public Result<Telegram> message(String chatId, SendableText sendable, ReplyKeyboardMarkup markup) {
+	public Result<Telegram> message(String chatId, SendableText sendable) {
 		System.out.println("SendableText");
 		String telegramId = null;
-		return message(chatId, sendable, telegramId, markup);
+		return message(chatId, sendable, telegramId, sendable.markup());
 	}
 	@Override
-	public Result<Telegram> message(String chatId, SendableImage sendable, ReplyKeyboardMarkup markup) {
+	public Result<Telegram> message(String chatId, SendableImage sendable) {
 		System.out.println("SendableImage");
-		Result<Telegram> response = telegramClient.sendPhoto(chatId, sendable.getFile(), markup);
+		Result<Telegram> response = telegramClient.sendPhoto(chatId, sendable.caption(), sendable.file(), sendable.markup());
 		if(response.isOk()){
 			telegramDao.create(response.getResult());
 		}
 		return response;
 	}
 	@Override
-	public Result<Telegram> reply(Telegram telegram, SendableText sendable, ReplyKeyboardMarkup markup) {
+	public Result<Telegram> reply(Telegram telegram, SendableText sendable) {
 		String chatId = telegram.chat().getIdAsString();
 		String telegramId = telegram.getIdAsString();
-		return message(chatId, sendable, telegramId, markup);
+		return message(chatId, sendable, telegramId, sendable.markup());
 	}
 	
 	private Result<Telegram> message(String chatId, SendableText sendable, String telegramId, ReplyKeyboardMarkup markup) {
@@ -80,7 +80,7 @@ public class TelegramServiceImpl implements TelegramService {
 		try {
 //			File file = FileUtils.toFile(new URL(url));
 			File file = HttpDownloadUtility.downloadFile(url);
-			Result<Telegram> response = telegramClient.sendPhoto(tgUserId, file, null);
+			Result<Telegram> response = telegramClient.sendPhoto(tgUserId, url, file, null);
 			if(response.isOk()){
 				telegramDao.create(response.getResult());
 				List<Telegram> replies = new ArrayList<Telegram>();

@@ -66,7 +66,6 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			Telegram message = update.getMessage();
 			Result<Telegram> result = null;
 			SendableText reply;
-			ReplyKeyboardMarkup markup = null;
 			List<List<String>> keyboard;
 			Command command = Command.lookup(message.text().toUpperCase());
 			User from = message.from();
@@ -78,7 +77,6 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				//terminate game
 				this.games.remove(from.getIdAsString());
 			case HI:
-				reply =  SendableText.create("Select a game...");
 				keyboard = new ArrayList<List<String>>(){{
 					add(new ArrayList<String>(){{
 						add(Command.TICTACTOE.toString());
@@ -87,11 +85,10 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 						add(Command.CHESS.toString());
 					}});
 				}};
-				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				reply =  SendableText.create("Select a game...", ReplyKeyboardMarkup.selective(keyboard).oneTime());
 				break;
 			case TICTACTOE:
 				this.games.put(from.getIdAsString(), new TicTacToe(from));
-				reply =  SendableText.create(command.toString()+ ": Select your player ...");
 				keyboard = new ArrayList<List<String>>(){{
 					add(new ArrayList<String>(){{
 						add("X");
@@ -101,15 +98,13 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 						add(Command.QUIT.toString());
 					}});
 				}};
-				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				reply =  SendableText.create(command.toString()+ ": Select your player ...", ReplyKeyboardMarkup.selective(keyboard).oneTime());
 				break;
 			case X:
 			case O:
-				reply = SendableText.create("Enter your move");
 				Game game = this.games.get(from.getIdAsString());
 				TicTacToe ticTacToe = (TicTacToe)game;
-				keyboard = ticTacToe.keyboard(command.toString());
-				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				reply = ticTacToe.reply(command.toString());
 				break;
 			case O1:
 			case O2:
@@ -134,9 +129,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				}
 				game = this.games.get(from.getIdAsString());
 				ticTacToe = ((TicTacToe)game).move(command.toString());
-				keyboard = ticTacToe.keyboard(command.toString());
-				reply = ticTacToe.reply();
-				markup = ReplyKeyboardMarkup.selective(keyboard).oneTime();
+				reply = ticTacToe.reply(command.toString());
 				break;
 			case UNKNOWN:
 			default:
@@ -146,18 +139,17 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				break;
 			}
 			Result<Boolean> actionSet = telegramService.setStatus(message, ChatAction.TYPING);
-			result = msg(message, reply, markup);
+			result = msg(message, reply);
 			if(result.isOk()){
 				updateService.update(update.markProcessed());
 			}
 		}
 	}
 
-	private Result<Telegram> msg(Telegram message, SendableText reply,
-			ReplyKeyboardMarkup markup) {
+	private Result<Telegram> msg(Telegram message, SendableText reply) {
 		if(reply instanceof SendableImage){
-			return telegramService.message(message.chat().getIdAsString(), (SendableImage)reply, markup);
+			return telegramService.message(message.chat().getIdAsString(), (SendableImage)reply);
 		}
-		return telegramService.message(message.chat().getIdAsString(), reply, markup);
+		return telegramService.message(message.chat().getIdAsString(), reply);
 	}
 }

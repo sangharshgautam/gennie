@@ -114,15 +114,18 @@ public class TelegramClientImpl implements TelegramClient {
 		return Method.forwardMessage.post(webTarget(), MessageResult.class, Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
 	}
 
-	@Override	public Result<Telegram> sendPhoto(final String chatId, File file, final ReplyKeyboard rMarkup) {
+	@Override	public Result<Telegram> sendPhoto(final String chatId, String caption, File file, final ReplyKeyboard rMarkup) {
 		FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(Param.PHOTO.getVal(), file, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 		fileDataBodyPart.setContentDisposition(name(Param.PHOTO.getVal()).fileName(file.getName()).build());
 
 		FormDataMultiPart form = new FormDataMultiPart()
 			.field(Param.CHAT_ID.getVal(),chatId);
-		/*if(rMarkup != null){
+		if(rMarkup != null){
 			form.field(Param.REPLY_MARKUP.getVal(), gson.toJson(rMarkup));
-		}*/
+		}
+		if(StringUtils.isNotBlank(caption)){
+			form.field(Param.CAPTION.getVal(), caption);
+		}
 		final MultiPart multiPartEntity = form.bodyPart(fileDataBodyPart);
 		return Method.sendPhoto.post(webTarget(), MessageResult.class, Entity.entity(multiPartEntity, MediaType.MULTIPART_FORM_DATA));
 	}
