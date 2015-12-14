@@ -128,7 +128,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					this.games.put(from.getIdAsString(), new TicTacToe(from));
 				}
 				game = this.games.get(from.getIdAsString());
-				ticTacToe = ((TicTacToe)game).move(command.toString());
+				ticTacToe = ((TicTacToe)game).move(command);
 				reply = ticTacToe.reply(command.toString());
 				break;
 			case UNKNOWN:
