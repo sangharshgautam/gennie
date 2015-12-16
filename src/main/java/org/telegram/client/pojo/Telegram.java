@@ -83,6 +83,7 @@ public class Telegram extends Identifiable{
 //		@XmlElement(name="photo", type=PhotoList.class),
 		@XmlElement(name="sticker", type=StickerMessage.class),
 		@XmlElement(name="video", type=VideoMessage.class),
+		@XmlElement(name="voice", type=VoiceMessage.class),
 		@XmlElement(name="contact", type=ContactMessage.class),
 		@XmlElement(name="location", type=LocationMessage.class)
 	})
