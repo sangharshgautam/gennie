@@ -29,4 +29,6 @@ public class Param {
 	public static final String USERNAME = "username";
 	
 	public static final String AS_USER = "as_user";
+	public static final String CODE = "code";
+	public static final String CLIENT_SECRET = "client_secret";
 }

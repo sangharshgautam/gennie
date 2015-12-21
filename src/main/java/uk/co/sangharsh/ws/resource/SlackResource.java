@@ -10,6 +10,8 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 
+import uk.co.sangharsh.service.SlackClient;
+
 @Component
 @Path(SlackResource.ROOT)
 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -17,10 +19,14 @@ import org.springframework.stereotype.Component;
 public class SlackResource {
 	public static final String ROOT = "slack";
 	
+	private SlackClient slackClient;
+	
 	@GET
 	@Path("authorize/handle")
 	public Response redirected(@QueryParam(value = "code") String code){
 		System.out.println("CODE: "+code);
-		return Response.ok().build();
+		String resp = slackClient.authorize(code);
+		System.out.println(resp);
+		return Response.ok(resp).build();
 	}
 }
