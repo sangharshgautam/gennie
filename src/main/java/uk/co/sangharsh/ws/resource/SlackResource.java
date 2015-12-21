@@ -8,6 +8,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import uk.co.sangharsh.service.SlackClient;
@@ -19,6 +20,7 @@ import uk.co.sangharsh.service.SlackClient;
 public class SlackResource {
 	public static final String ROOT = "slack";
 	
+	@Autowired
 	private SlackClient slackClient;
 	
 	@GET
