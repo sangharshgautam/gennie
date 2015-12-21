@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AuthRequest {
 	private String q;
-	private String access_token = WitClientTest.TOKEN;
+	private String access_token = "ANOA5GBKTF7J7G63WW5FRFM54SFIGKSI";
 	public AuthRequest(String q) {
 		super();
 		this.q = q;
