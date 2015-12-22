@@ -1,5 +1,7 @@
 package uk.co.sangharsh.service;
 
+import java.util.List;
+
 public interface NlpClient {
-	public String summarize(String text);
+	public List<String> summarize(String text);
 }

@@ -1,5 +1,7 @@
 package uk.co.sangharsh.service;
 
+import java.util.List;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -18,10 +20,10 @@ public class NlpClientImpl implements NlpClient {
 	private Client client = ClientBuilder.newClient().register(LoggingFilter.class);
 	
 	@Override
-	public String summarize(String text) {
+	public List<String> summarize(String text) {
 		SummarizeRequest request = SummarizeRequest.using(3, text);
 		Result result = client.target(nlpBaseUrl).path("nlp/summarize").request(MediaType.APPLICATION_JSON).post(Entity.entity(request, MediaType.APPLICATION_JSON), Result.class);
-		return result.getDoc().get(0);
+		return result.getDoc();
 	}
 
 }

@@ -85,14 +85,21 @@ public class SlackClientImpl implements SlackClient {
 		List<Message> messages = channelHistory().messages();
 		StringBuilder builder =  new StringBuilder();
 		for(Message message: messages){
-			builder.append(message.text()).append(". ");
+			if(!message.isMyBot()){
+				builder.append(message.text()).append(". ");
+			}
 		}
 		final String text = builder.toString();
-		final String resp = nlpClient.summarize(text);
+		final List<String> docs = nlpClient.summarize(text);
+		StringBuilder repBuilder = new StringBuilder();
+		for(String doc: docs){
+			repBuilder.append(doc).append("\n");
+		}
+		final String summary = repBuilder.toString();
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
-			put(Param.TEXT, resp);
+			put(Param.TEXT, summary);
 			put(Param.USERNAME, "Summarizer");
 			put(Param.AS_USER, "false");
 		}};
