@@ -12,17 +12,21 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.slack.api.client.param.Param;
+import com.slack.api.client.pojo.response.ChannelHistoryResponse;
+import com.slack.api.client.type.Method;
 import com.slack.api.client.type.Slack;
 
 @Service
@@ -61,29 +65,41 @@ public class SlackClientImpl implements SlackClient {
 				.queryParam(Param.CLIENT_ID, clientId)
 				.queryParam(Param.CLIENT_SECRET, clientSecret)
 				.queryParam(Param.CODE, code)
-//				.queryParam(Param.REDIRECT_URI, "http://gennie-finnler.rhcloud.com/api/slack/authorize/handle")
 				.request().get(String.class);
 		return resp;
 	}
 	private static final String CHANNEL = "C0GNNS5PE"; //#eclipse
 
 	private static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
+	
+	private ChannelHistoryResponse channelHistory() {
+		Map<String, String> params = new HashMap<String, String>(){{
+			put(Param.TOKEN, BOT_TOKEN);
+			put(Param.CHANNEL, CHANNEL);
+		}};
+		return call(client, Slack.Channel.HISTORY, params, ChannelHistoryResponse.class);
+	}
+	
 	@Override
-	public void postMessage(final String text) {
+	public void postMessage(final String command) {
+		String text = StringUtils.join(channelHistory().messages().toArray());
 		final String resp = nlpClient.summarize(text);
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
 			put(Param.TEXT, resp);
 			put(Param.USERNAME, "Summarizer");
-			put(Param.AS_USER, "true");
+			put(Param.AS_USER, "false");
 		}};
-		WebTarget target = client.target(slackBaseUrl)
-				.path(Slack.Chat.POST_MESSAGE.mName());
+		Response response = call(client, Slack.Chat.POST_MESSAGE, params, Response.class);
+	}
+	private <T> T call(Client client, Method method, Map<String, String> params, Class<T> clazz) {
+		WebTarget target = client.target(slackBaseUrl).path(method.mName());
 		for(Entry<String, String> entry : params.entrySet()){
 			target = target.queryParam(entry.getKey(), entry.getValue());
 		}
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
+		Assert.assertTrue(response.getStatus() == 200);
+		return response.readEntity(clazz);
 	}
-
 }
