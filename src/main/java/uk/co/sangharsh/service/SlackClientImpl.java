@@ -85,7 +85,7 @@ public class SlackClientImpl implements SlackClient {
 		List<Message> messages = channelHistory().messages();
 		StringBuilder builder =  new StringBuilder();
 		for(Message message: messages){
-			builder.append(message.text()).append(".");
+			builder.append(message.text()).append(". ");
 		}
 		final String text = builder.toString();
 		final String resp = nlpClient.summarize(text);
