@@ -18,6 +18,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,9 @@ public class SlackClientImpl implements SlackClient {
 	private static final Logger LOGGER = Logger.getLogger(SlackClientImpl.class.getName());
 	
 	private Client client; 
+	
+	@Autowired
+	private NlpClient nlpClient;
 	
 	@PostConstruct
 	public void setClientProperties(){
@@ -66,10 +70,11 @@ public class SlackClientImpl implements SlackClient {
 	private static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
 	@Override
 	public void postMessage(final String text) {
+		final String resp = nlpClient.summarize(text);
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
-			put(Param.TEXT, text);
+			put(Param.TEXT, resp);
 			put(Param.USERNAME, "Summarizer");
 			put(Param.AS_USER, "true");
 		}};
