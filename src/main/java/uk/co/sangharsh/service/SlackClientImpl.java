@@ -86,7 +86,7 @@ public class SlackClientImpl implements SlackClient {
 		List<Message> messages = channelHistory().messages();
 		StringBuilder builder =  new StringBuilder();
 		for(Message message: messages){
-			if(!message.isMyBot()){
+			if(!message.isToIgnore()){
 				builder.append(message.text()).append(". ");
 			}
 		}

@@ -16,7 +16,7 @@ public class Message {
 	public String text() {
 		return this.text;
 	}
-	public boolean isMyBot(){
-		return "U0GKLB5FC".equals(this.user);
+	public boolean isToIgnore(){
+		return "U0GKLB5FC".equals(this.user) || "file_share".equals(subtype) || "bot_message".equals(subtype);
 	}
 }
