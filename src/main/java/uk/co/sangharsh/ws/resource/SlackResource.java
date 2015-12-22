@@ -1,6 +1,7 @@
 package uk.co.sangharsh.ws.resource;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,8 +37,9 @@ public class SlackResource {
 	@POST
 	@Path("command")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response commandPost(){
-		System.out.println("Outgoing Webhooks pOST");
-		return Response.ok().build();
+	public Response commandPost(@FormParam("text") String text){
+		System.out.println("Outgoing Webhooks pOST "+text);
+		slackClient.postMessage(text);
+		return Response.ok(text).build();
 	}
 }
