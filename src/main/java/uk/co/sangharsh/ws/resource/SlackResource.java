@@ -33,15 +33,9 @@ public class SlackResource {
 		return Response.ok(resp).build();
 	}
 	
-	@GET
-	@Path("command")
-	public Response command(){
-		System.out.println("Outgoing Webhooks get");
-		return Response.ok().build();
-	}
-	
 	@POST
 	@Path("command")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response commandPost(){
 		System.out.println("Outgoing Webhooks pOST");
 		return Response.ok().build();
