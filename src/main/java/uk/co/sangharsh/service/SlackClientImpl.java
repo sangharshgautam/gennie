@@ -1,6 +1,7 @@
 package uk.co.sangharsh.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -12,19 +13,18 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.slack.api.client.param.Param;
+import com.slack.api.client.pojo.Message;
 import com.slack.api.client.pojo.response.ChannelHistoryResponse;
 import com.slack.api.client.type.Method;
 import com.slack.api.client.type.Slack;
@@ -82,7 +82,12 @@ public class SlackClientImpl implements SlackClient {
 	
 	@Override
 	public void postMessage(final String command) {
-		String text = StringUtils.join(channelHistory().messages().toArray());
+		List<Message> messages = channelHistory().messages();
+		StringBuilder builder =  new StringBuilder();
+		for(Message message: messages){
+			builder.append(message.text()).append(".");
+		}
+		final String text = builder.toString();
 		final String resp = nlpClient.summarize(text);
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
@@ -99,7 +104,6 @@ public class SlackClientImpl implements SlackClient {
 			target = target.queryParam(entry.getKey(), entry.getValue());
 		}
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
-		Assert.assertTrue(response.getStatus() == 200);
 		return response.readEntity(clazz);
 	}
 }
