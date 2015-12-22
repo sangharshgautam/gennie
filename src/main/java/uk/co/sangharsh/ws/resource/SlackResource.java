@@ -2,6 +2,7 @@ package uk.co.sangharsh.ws.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -30,5 +31,19 @@ public class SlackResource {
 		String resp = slackClient.authorize(code);
 		System.out.println(resp);
 		return Response.ok(resp).build();
+	}
+	
+	@GET
+	@Path("command")
+	public Response command(){
+		System.out.println("Outgoing Webhooks get");
+		return Response.ok().build();
+	}
+	
+	@POST
+	@Path("command")
+	public Response commandPost(){
+		System.out.println("Outgoing Webhooks pOST");
+		return Response.ok().build();
 	}
 }
