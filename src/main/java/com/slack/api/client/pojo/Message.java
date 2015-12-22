@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Message {
 	private String text;
 	private String user;
+	private String username;
 	private String type;
 	private String subtype;
 	private String ts;

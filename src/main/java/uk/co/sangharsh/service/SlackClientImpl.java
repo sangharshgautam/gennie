@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.slack.api.client.param.Param;
 import com.slack.api.client.pojo.Message;
 import com.slack.api.client.pojo.response.ChannelHistoryResponse;
+import com.slack.api.client.pojo.response.PostMessageResponse;
 import com.slack.api.client.type.Method;
 import com.slack.api.client.type.Slack;
 
@@ -103,7 +104,7 @@ public class SlackClientImpl implements SlackClient {
 			put(Param.USERNAME, "Summarizer");
 			put(Param.AS_USER, "false");
 		}};
-		Response response = call(client, Slack.Chat.POST_MESSAGE, params, Response.class);
+		PostMessageResponse response = call(client, Slack.Chat.POST_MESSAGE, params, PostMessageResponse.class);
 	}
 	private <T> T call(Client client, Method method, Map<String, String> params, Class<T> clazz) {
 		WebTarget target = client.target(slackBaseUrl).path(method.mName());
