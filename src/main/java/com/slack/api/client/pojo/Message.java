@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.slack.api.client.type.MessageSubType;
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Message {
@@ -17,6 +19,9 @@ public class Message {
 		return this.text;
 	}
 	public boolean isToIgnore(){
-		return "U0GKLB5FC".equals(this.user) || "file_share".equals(subtype) || "bot_message".equals(subtype);
+		return "U0GKLB5FC".equals(this.user) || MessageSubType.FILE_SHARE.toString().equals(subtype) || MessageSubType.BOT_MESSAGE.toString().equals(subtype);
+	}
+	public String user() {
+		return user;
 	}
 }

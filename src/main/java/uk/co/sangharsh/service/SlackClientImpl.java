@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import uk.co.sangharsh.nlp.resource.pojo.Conversation;
+import uk.co.sangharsh.nlp.resource.pojo.Utterance;
+
 import com.slack.api.client.param.Param;
 import com.slack.api.client.pojo.Message;
 import com.slack.api.client.pojo.response.ChannelHistoryResponse;
@@ -84,14 +87,13 @@ public class SlackClientImpl implements SlackClient {
 	@Override
 	public void postMessage(final String command) {
 		List<Message> messages = channelHistory().messages();
-		StringBuilder builder =  new StringBuilder();
+		Conversation conversation = new Conversation();
 		for(Message message: messages){
 			if(!message.isToIgnore()){
-				builder.append(message.text()).append(". ");
+				conversation.add(Utterance.utterance(message.user(), message.text()));
 			}
 		}
-		final String text = builder.toString();
-		final List<String> docs = nlpClient.summarize(text);
+		final List<String> docs = nlpClient.summarize(conversation);
 		StringBuilder repBuilder = new StringBuilder();
 		for(String doc: docs){
 			repBuilder.append(doc).append("\n");
