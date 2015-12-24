@@ -96,7 +96,7 @@ public class SlackClientImpl implements SlackClient {
 		final List<String> docs = nlpClient.summarize(conversation);
 		StringBuilder repBuilder = new StringBuilder();
 		for(String doc: docs){
-			repBuilder.append(doc).append("\n");
+			repBuilder.append(doc).append("\n ");
 		}
 		final String summary = repBuilder.toString();
 		Map<String, String> params = new HashMap<String, String>(){{
