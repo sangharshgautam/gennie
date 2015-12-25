@@ -78,13 +78,13 @@ public class SlackClientImpl implements SlackClient {
 
 	private static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
 	
-	private ChannelHistoryResponse channelHistory(String oldest) {
+	private ChannelHistoryResponse channelHistory(String latest) {
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
 		}};
-		if(StringUtils.isNotBlank(oldest)){
-			params.put(Param.OLDEST, oldest);
+		if(StringUtils.isNotBlank(latest)){
+			params.put(Param.LATEST, latest);
 		}
 		return call(client, Slack.Channel.HISTORY, params, ChannelHistoryResponse.class);
 	}
@@ -93,12 +93,12 @@ public class SlackClientImpl implements SlackClient {
 	public void postMessage(final String command) {
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
-		String oldest = null;
+		String latest = null;
 		do {
-			channelHistory = channelHistory(oldest);
+			channelHistory = channelHistory(latest);
 			List<Message> messagesChunk = channelHistory.messages();
 			messages.addAll(messagesChunk);
-			oldest = messagesChunk.isEmpty() ? null : messagesChunk.get(messagesChunk.size()-1).ts();
+			latest = messagesChunk.isEmpty() ? null : messagesChunk.get(messagesChunk.size()-1).ts();
 		} while (channelHistory.hasMore());
 			
 		Conversation conversation = new Conversation();
