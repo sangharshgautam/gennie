@@ -27,6 +27,11 @@ public class Param {
 	public static final String TEXT = "text";
 	public static final String CHANNEL = "channel";
 	public static final String USERNAME = "username";
+	public static final String INCLUSIVE = "inclusive";
+	public static final String COUNT = "count";
+	public static final String UNREADS = "unreads";
+	public static final String OLDEST = "oldest";
+	public static final String LATEST = "latest";
 	
 	public static final String AS_USER = "as_user";
 	public static final String CODE = "code";

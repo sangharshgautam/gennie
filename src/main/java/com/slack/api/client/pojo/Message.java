@@ -24,4 +24,7 @@ public class Message {
 	public String user() {
 		return user;
 	}
+	public String ts() {
+		return ts;
+	}
 }

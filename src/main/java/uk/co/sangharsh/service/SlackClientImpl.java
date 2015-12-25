@@ -1,5 +1,6 @@
 package uk.co.sangharsh.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 import org.glassfish.jersey.client.ClientConfig;
@@ -76,21 +78,33 @@ public class SlackClientImpl implements SlackClient {
 
 	private static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
 	
-	private ChannelHistoryResponse channelHistory() {
+	private ChannelHistoryResponse channelHistory(String oldest) {
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
 		}};
+		if(StringUtils.isNotBlank(oldest)){
+			params.put(Param.OLDEST, oldest);
+		}
 		return call(client, Slack.Channel.HISTORY, params, ChannelHistoryResponse.class);
 	}
 	
 	@Override
 	public void postMessage(final String command) {
-		List<Message> messages = channelHistory().messages();
+		List<Message> messages = new ArrayList<>();
+		ChannelHistoryResponse channelHistory ;
+		String oldest = null;
+		do {
+			channelHistory = channelHistory(oldest);
+			List<Message> messagesChunk = channelHistory.messages();
+			messages.addAll(messagesChunk);
+			oldest = messagesChunk.isEmpty() ? null : messagesChunk.get(messagesChunk.size()-1).ts();
+		} while (channelHistory.hasMore());
+			
 		Conversation conversation = new Conversation();
 		for(Message message: messages){
 			if(!message.isToIgnore()){
-				conversation.add(Utterance.utterance("<@"+message.user()+">", message.text()));
+				conversation.add(Utterance.utterance(" <@"+message.user()+">", message.text()));
 			}
 		}
 		final List<String> docs = nlpClient.summarize(conversation);
