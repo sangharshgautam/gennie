@@ -82,6 +82,8 @@ public class SlackClientImpl implements SlackClient {
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
+			put(Param.COUNT, "1000");
+			put(Param.UNREADS, "1");
 		}};
 		if(StringUtils.isNotBlank(latest)){
 			params.put(Param.LATEST, latest);
