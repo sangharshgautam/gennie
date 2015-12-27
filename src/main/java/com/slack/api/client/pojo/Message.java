@@ -19,7 +19,7 @@ public class Message {
 		return this.text;
 	}
 	public boolean isToIgnore(){
-		return "U0GKLB5FC".equals(this.user) || MessageSubType.FILE_SHARE.toString().equals(subtype) || MessageSubType.BOT_MESSAGE.toString().equals(subtype);
+		return this.text.toUpperCase().contains("SUMMARIZE") || MessageSubType.FILE_SHARE.toString().equals(subtype) || MessageSubType.BOT_MESSAGE.toString().equals(subtype);
 	}
 	public String user() {
 		return user;
