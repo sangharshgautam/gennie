@@ -1,5 +1,7 @@
 package uk.co.sangharsh.service;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,11 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.websocket.ClientEndpointConfig;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -22,6 +29,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
+import org.glassfish.tyrus.client.ClientManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,6 +43,7 @@ import com.slack.api.client.param.Param;
 import com.slack.api.client.pojo.Message;
 import com.slack.api.client.pojo.response.ChannelHistoryResponse;
 import com.slack.api.client.pojo.response.PostMessageResponse;
+import com.slack.api.client.pojo.response.RtmStartResponse;
 import com.slack.api.client.type.Method;
 import com.slack.api.client.type.Slack;
 
@@ -57,6 +66,10 @@ public class SlackClientImpl implements SlackClient {
 	@Autowired
 	private NlpClient nlpClient;
 	
+	private Session rtmSession;
+	
+	private static final String SENT_MESSAGE = "Hello World";
+	
 	@PostConstruct
 	public void setClientProperties(){
 		ClientConfig cc = new ClientConfig()
@@ -66,8 +79,38 @@ public class SlackClientImpl implements SlackClient {
 				.register(new LoggingFilter(LOGGER, true))
 				.register(MultiPartFeature.class);
 		this.client = ClientBuilder.newClient(cc);
+		this.connect();
 	}
-	
+	private void connect(){
+        final RtmStartResponse resp = this.client.target(slackBaseUrl).path("rtm.start").queryParam(Param.TOKEN, SlackClientImpl.BOT_TOKEN).request().get(RtmStartResponse.class);
+        try {
+
+            final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
+
+            ClientManager clientManager = ClientManager.createClient();
+            clientManager.connectToServer(new Endpoint() {
+
+                @Override
+                public void onOpen(Session session, EndpointConfig config) {
+                	SlackClientImpl.this.rtmSession = session;
+                    try {
+                        session.addMessageHandler(new MessageHandler.Whole<String>() {
+
+                            @Override
+                            public void onMessage(String message) {
+                                System.out.println("Received message: "+message);
+                            }
+                        });
+                        session.getBasicRemote().sendText(SENT_MESSAGE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, cec, new URI(resp.wsUrl()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	@Override
 	public String authorize(String code) {
 		String resp = client.target("https://slack.com/api/oauth.access")
@@ -79,7 +122,7 @@ public class SlackClientImpl implements SlackClient {
 	}
 	private static final String CHANNEL = "C0GNNS5PE"; //#eclipse
 
-	private static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
+	public static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
 	
 	private ChannelHistoryResponse channelHistory(String latest) {
 		Map<String, String> params = new HashMap<String, String>(){{
