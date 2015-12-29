@@ -13,6 +13,8 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.slack.api.client.form.CommandForm;
+
 import uk.co.sangharsh.service.SlackClient;
 
 @Component
@@ -37,8 +39,9 @@ public class SlackResource {
 	@POST
 	@Path("command")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response commandPost(@FormParam("text") String text){
-		System.out.println("Outgoing Webhooks pOST "+text);
+	public Response commandPost(CommandForm form){
+		System.out.println("Outgoing Webhooks pOST "+form.toString());
+		String text = form.text();
 		slackClient.postMessage(text);
 		return Response.ok(text).build();
 	}
