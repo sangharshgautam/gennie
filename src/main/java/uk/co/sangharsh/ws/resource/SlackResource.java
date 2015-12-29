@@ -43,6 +43,6 @@ public class SlackResource {
 		System.out.println("Outgoing Webhooks pOST "+commandForm.toString());
 		String text = commandForm.text();
 		slackClient.respondTo(commandForm);
-		return Response.ok(text).build();
+		return Response.ok().build();
 	}
 }

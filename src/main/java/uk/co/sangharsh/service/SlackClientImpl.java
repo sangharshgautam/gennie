@@ -79,7 +79,7 @@ public class SlackClientImpl implements SlackClient {
 				.register(new LoggingFilter(LOGGER, true))
 				.register(MultiPartFeature.class);
 		this.client = ClientBuilder.newClient(cc);
-		this.connect();
+//		this.connect();
 	}
 	private void connect(){
         final RtmStartResponse resp = this.client.target(slackBaseUrl).path("rtm.start").queryParam(Param.TOKEN, SlackClientImpl.BOT_TOKEN).request().get(RtmStartResponse.class);
@@ -137,7 +137,7 @@ public class SlackClientImpl implements SlackClient {
 		return call(client, Slack.Channel.HISTORY, params, ChannelHistoryResponse.class);
 	}
 	@Override
-	public PostMessageResponse respondTo(CommandForm commandForm) {
+	public void respondTo(CommandForm commandForm) {
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
 		String latest = null;
@@ -163,7 +163,6 @@ public class SlackClientImpl implements SlackClient {
 		CommandResponse entity = CommandResponse.using(summary);
 		WebTarget target = client.target(commandForm.responseUrl());
 		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(entity, MediaType.APPLICATION_JSON));
-		return response.readEntity(PostMessageResponse.class);
 	}
 	@Override
 	public void postMessage(final String message) {
