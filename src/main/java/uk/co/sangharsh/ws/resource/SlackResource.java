@@ -37,9 +37,18 @@ public class SlackResource {
 	}
 	
 	@POST
-	@Path("command")
+	@Path("extract/summary")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response commandPost(@BeanParam CommandForm commandForm){
+	public Response summarize(@BeanParam CommandForm commandForm){
+		System.out.println("Outgoing Webhooks pOST "+commandForm.toString());
+		String text = commandForm.text();
+		slackClient.respondTo(commandForm);
+		return Response.ok().build();
+	}
+	@POST
+	@Path("extract/actionitems")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response actionItems(@BeanParam CommandForm commandForm){
 		System.out.println("Outgoing Webhooks pOST "+commandForm.toString());
 		String text = commandForm.text();
 		slackClient.respondTo(commandForm);
