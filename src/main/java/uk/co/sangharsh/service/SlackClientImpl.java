@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,12 +29,13 @@ import org.springframework.stereotype.Service;
 import uk.co.sangharsh.nlp.resource.pojo.Conversation;
 import uk.co.sangharsh.nlp.resource.pojo.Utterance;
 
+import com.slack.api.client.form.CommandForm;
+import com.slack.api.client.form.CommandResponse;
 import com.slack.api.client.param.Param;
 import com.slack.api.client.pojo.Message;
 import com.slack.api.client.pojo.response.ChannelHistoryResponse;
 import com.slack.api.client.pojo.response.PostMessageResponse;
 import com.slack.api.client.type.Method;
-import com.slack.api.client.type.ResponseType;
 import com.slack.api.client.type.Slack;
 
 @Service
@@ -91,9 +93,8 @@ public class SlackClientImpl implements SlackClient {
 		}
 		return call(client, Slack.Channel.HISTORY, params, ChannelHistoryResponse.class);
 	}
-	
 	@Override
-	public void postMessage(final String command) {
+	public PostMessageResponse respondTo(CommandForm commandForm) {
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
 		String latest = null;
@@ -116,13 +117,19 @@ public class SlackClientImpl implements SlackClient {
 			repBuilder.append(doc).append("\n ");
 		}
 		final String summary = repBuilder.toString();
+		CommandResponse entity = CommandResponse.using(summary);
+		WebTarget target = client.target(commandForm.responseUrl());
+		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		return response.readEntity(PostMessageResponse.class);
+	}
+	@Override
+	public void postMessage(final String message) {
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
-			put(Param.TEXT, summary);
+			put(Param.TEXT, message);
 			put(Param.USERNAME, "Summarizer");
 			put(Param.AS_USER, "false");
-			put(Param.RESPONSE_TYPE, ResponseType.EPHEMERAL);
 		}};
 		PostMessageResponse response = call(client, Slack.Chat.POST_MESSAGE, params, PostMessageResponse.class);
 	}
@@ -134,4 +141,5 @@ public class SlackClientImpl implements SlackClient {
 		Response response = target.request(MediaType.APPLICATION_JSON).get();
 		return response.readEntity(clazz);
 	}
+
 }

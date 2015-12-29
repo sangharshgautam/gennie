@@ -45,4 +45,8 @@ public class CommandForm {
 				+ ", userName=" + userName + ", command=" + command + ", text="
 				+ text + ", responseUrl=" + responseUrl + "]";
 	}
+
+	public String responseUrl() {
+		return responseUrl;
+	}
 }

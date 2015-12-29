@@ -39,10 +39,10 @@ public class SlackResource {
 	@POST
 	@Path("command")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response commandPost(@BeanParam CommandForm form){
-		System.out.println("Outgoing Webhooks pOST "+form.toString());
-		String text = form.text();
-		slackClient.postMessage(text);
+	public Response commandPost(@BeanParam CommandForm commandForm){
+		System.out.println("Outgoing Webhooks pOST "+commandForm.toString());
+		String text = commandForm.text();
+		slackClient.respondTo(commandForm);
 		return Response.ok(text).build();
 	}
 }
