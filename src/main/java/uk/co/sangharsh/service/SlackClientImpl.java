@@ -33,6 +33,7 @@ import com.slack.api.client.pojo.Message;
 import com.slack.api.client.pojo.response.ChannelHistoryResponse;
 import com.slack.api.client.pojo.response.PostMessageResponse;
 import com.slack.api.client.type.Method;
+import com.slack.api.client.type.ResponseType;
 import com.slack.api.client.type.Slack;
 
 @Service
@@ -121,6 +122,7 @@ public class SlackClientImpl implements SlackClient {
 			put(Param.TEXT, summary);
 			put(Param.USERNAME, "Summarizer");
 			put(Param.AS_USER, "false");
+			put(Param.RESPONSE_TYPE, ResponseType.EPHEMERAL);
 		}};
 		PostMessageResponse response = call(client, Slack.Chat.POST_MESSAGE, params, PostMessageResponse.class);
 	}
