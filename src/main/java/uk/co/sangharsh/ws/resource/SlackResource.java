@@ -1,7 +1,7 @@
 package uk.co.sangharsh.ws.resource;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -13,9 +13,9 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.slack.api.client.form.CommandForm;
-
 import uk.co.sangharsh.service.SlackClient;
+
+import com.slack.api.client.form.CommandForm;
 
 @Component
 @Path(SlackResource.ROOT)
@@ -39,7 +39,7 @@ public class SlackResource {
 	@POST
 	@Path("command")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response commandPost(CommandForm form){
+	public Response commandPost(@BeanParam CommandForm form){
 		System.out.println("Outgoing Webhooks pOST "+form.toString());
 		String text = form.text();
 		slackClient.postMessage(text);
