@@ -94,14 +94,14 @@ public class SlackClientImpl implements SlackClient {
                 public void onOpen(Session session, EndpointConfig config) {
                 	SlackClientImpl.this.rtmSession = session;
                     try {
-                        session.addMessageHandler(new MessageHandler.Whole<String>() {
+                    	SlackClientImpl.this.rtmSession.addMessageHandler(new MessageHandler.Whole<String>() {
 
                             @Override
                             public void onMessage(String message) {
                                 System.out.println("Received message: "+message);
                             }
                         });
-                        session.getBasicRemote().sendText(SENT_MESSAGE);
+                    	SlackClientImpl.this.rtmSession.getBasicRemote().sendText(SENT_MESSAGE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
