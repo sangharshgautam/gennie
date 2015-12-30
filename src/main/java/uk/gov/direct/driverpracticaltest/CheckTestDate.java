@@ -66,7 +66,7 @@ public class CheckTestDate {
 		if(checkCaptcha(client, html)){
 			return;
 		}
-		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", true);
+		String html2 = post(client, params(), DVSA_ROOT + "/login", "test2.html", false);
 		
 		if(checkCaptcha(client, html2)){
 			return;
