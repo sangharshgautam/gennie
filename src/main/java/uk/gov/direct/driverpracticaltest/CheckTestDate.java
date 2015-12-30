@@ -43,7 +43,7 @@ public class CheckTestDate {
 
 	private static final String MANAGE_URL = DVSA_ROOT + "/manage";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException {
 		CheckTestDate test = new CheckTestDate();
 		try {
 			test.run();
@@ -53,7 +53,7 @@ public class CheckTestDate {
 			if(msg == null){
 				msg = e.toString();
 			}
-			String encoded = URLEncoder.encode(msg);
+			String encoded = URLEncoder.encode(msg, "UTF-8");
 			Jsoup.connect(GENNIE_API + "/telegram/message/120340564?msg="+encoded);
 		} finally{
 			
@@ -89,13 +89,13 @@ public class CheckTestDate {
 		Date slotDate = format.parse(slotDateStr);
 		if(slotDate.before(currentBookingDate)){
 			String msg = "NEW Slot found "+ slotDateStr;
-			String encoded = URLEncoder.encode(msg);
+			String encoded = URLEncoder.encode(msg, "UTF-8");
 			DateTime dt = new DateTime().withYear(2015).withMonthOfYear(12).withDayOfMonth(5).withTime(0, 0, 0, 0);
 			if(slotDate.before(currentBookingDate)){
 				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html", false);
 				Element iAmCandiate = parse(book1, "a#i-am-candidate.button.cta").first();
 				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html", false);
-				encoded = URLEncoder.encode("Slot Booked");
+				encoded = URLEncoder.encode("Slot Booked", "UTF-8");
 				triggerMessage(client, "120340564" , encoded);
 				triggerMessage(client, "151865631" , encoded);
 			}else{
