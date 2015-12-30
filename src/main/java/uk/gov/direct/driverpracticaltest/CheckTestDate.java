@@ -91,7 +91,7 @@ public class CheckTestDate {
 			String msg = "NEW Slot found "+ slotDateStr;
 			String encoded = URLEncoder.encode(msg);
 			DateTime dt = new DateTime().withYear(2015).withMonthOfYear(12).withDayOfMonth(5).withTime(0, 0, 0, 0);
-			if(slotDate.before(dt.toDate())){
+			if(slotDate.before(currentBookingDate)){
 				String book1 = get(client, DVSA_ROOT + slotLink.attr("href")+"&warningAcknowledged=true", "Book1.html", false);
 				Element iAmCandiate = parse(book1, "a#i-am-candidate.button.cta").first();
 				String book2 = get(client, DVSA_ROOT + iAmCandiate.attr("href"), "Book2.html", false);
@@ -105,7 +105,7 @@ public class CheckTestDate {
 		}
 		
 		get(client, MANAGE_URL, "test5.html", false);
-		String signOutLink = DVSA_ROOT + parse(html2, "div#header-button-container a.button").get(0).attr("href");
+		String signOutLink = DVSA_ROOT + parse(html2, "div#header-button-container a.button").first().attr("href");
 		System.out.println("SIGNOUT");
 		get(client, signOutLink, "test6.html", false);
 	}
@@ -113,6 +113,7 @@ public class CheckTestDate {
 	private boolean checkCaptcha(HttpClient client, String html2) throws ClientProtocolException, IOException {
 		Elements captchas = parse(html2, "div#recaptcha-check script");
 		if(!captchas.isEmpty()){
+			triggerMessage(client, "120340564" , "Captcha found");
 			Element captcha = captchas.first();
 			String scriptSrc = captcha.attr("src");
 			String content = get(client, scriptSrc, "captcha.html", false);
