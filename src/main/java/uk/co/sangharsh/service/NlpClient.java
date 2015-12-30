@@ -8,4 +8,6 @@ public interface NlpClient {
 	public List<String> summarize(String text);
 
 	public List<String> summarize(Conversation conversation);
+
+	public List<String> actionItems(Conversation conversation);
 }

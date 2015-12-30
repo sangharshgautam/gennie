@@ -154,7 +154,7 @@ public class SlackClientImpl implements SlackClient {
 				conversation.add(Utterance.utterance(" <@"+message.user()+">", message.text()));
 			}
 		}
-		final List<String> docs = nlpClient.summarize(conversation);
+		final List<String> docs = nlpClient.actionItems(conversation);
 		StringBuilder repBuilder = new StringBuilder();
 		for(String doc: docs){
 			repBuilder.append(doc).append("\n ");

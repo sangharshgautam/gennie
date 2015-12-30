@@ -33,4 +33,10 @@ public class NlpClientImpl implements NlpClient {
 		return result.getDoc();
 	}
 
+	@Override
+	public List<String> actionItems(Conversation conversation) {
+		Result result = client.target(nlpBaseUrl).path("nlp/actionitems/conversation").request(MediaType.APPLICATION_JSON).post(Entity.entity(conversation, MediaType.APPLICATION_JSON), Result.class);
+		return result.getDoc();
+	}
+
 }
