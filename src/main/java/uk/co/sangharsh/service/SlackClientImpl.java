@@ -159,7 +159,7 @@ public class SlackClientImpl implements SlackClient {
 		final List<String> docs = nlpClient.summarize(conversation);
 		StringBuilder respBuilder = new StringBuilder();
 		for(String doc: docs){
-			respBuilder.append("(.)").append(doc).append("\n ");
+			respBuilder.append(".").append(doc).append("\n ");
 		}
 		final String summary = respBuilder.toString();
 		CommandResponse entity = CommandResponse.using(summary);
