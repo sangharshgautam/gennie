@@ -32,6 +32,7 @@ import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.tyrus.client.ClientManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import uk.co.sangharsh.nlp.resource.pojo.Conversation;
@@ -136,6 +137,7 @@ public class SlackClientImpl implements SlackClient {
 		}
 		return call(client, Slack.Channel.HISTORY, params, ChannelHistoryResponse.class);
 	}
+	@Async
 	@Override
 	public void respondTo(CommandForm commandForm) {
 		List<Message> messages = new ArrayList<>();
