@@ -41,16 +41,14 @@ public class SlackResource {
 	@Path("extract/summary")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response summarize(@BeanParam CommandForm commandForm){
-		String text = commandForm.text();
 		slackClient.respondTo(commandForm);
-		return Response.ok(CommandResponse.processing(), MediaType.APPLICATION_JSON).build();
+		return Response.ok(CommandResponse.processing().text()).build();
 	}
 	@POST
 	@Path("extract/actionitems")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response actionItems(@BeanParam CommandForm commandForm){
-		String text = commandForm.text();
 		slackClient.respondTo(commandForm);
-		return Response.ok(CommandResponse.processing(), MediaType.APPLICATION_JSON).build();
+		return Response.ok(CommandResponse.processing().text()).build();
 	}
 }

@@ -29,4 +29,7 @@ public class CommandResponse {
 	public static final CommandResponse processing(){
 		return using("Your request has been accepted and will be processed asap.");
 	}
+	public String text() {
+		return text;
+	}
 }
