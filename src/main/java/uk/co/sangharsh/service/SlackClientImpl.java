@@ -157,11 +157,11 @@ public class SlackClientImpl implements SlackClient {
 			}
 		}
 		final List<String> docs = nlpClient.summarize(conversation);
-		StringBuilder repBuilder = new StringBuilder();
+		StringBuilder respBuilder = new StringBuilder();
 		for(String doc: docs){
-			repBuilder.append(doc).append("\n ");
+			respBuilder.append("(.)").append(doc).append("\n ");
 		}
-		final String summary = repBuilder.toString();
+		final String summary = respBuilder.toString();
 		CommandResponse entity = CommandResponse.using(summary);
 		WebTarget target = client.target(commandForm.responseUrl());
 		Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(entity, MediaType.APPLICATION_JSON));
