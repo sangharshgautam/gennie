@@ -42,13 +42,13 @@ public class SlackResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response summarize(@BeanParam CommandForm commandForm){
 		slackClient.respondTo(commandForm);
-		return Response.ok(CommandResponse.processing().text()).build();
+		return Response.ok(CommandResponse.processing(commandForm.text()).text()).build();
 	}
 	@POST
 	@Path("extract/actionitems")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response actionItems(@BeanParam CommandForm commandForm){
 		slackClient.respondTo(commandForm);
-		return Response.ok(CommandResponse.processing().text()).build();
+		return Response.ok(CommandResponse.processing(commandForm.text()).text()).build();
 	}
 }

@@ -28,8 +28,8 @@ public class CommandResponse {
 	public static final CommandResponse using(String text) {
 		return new CommandResponse(text);
 	}
-	public static final CommandResponse processing(){
-		return using("Your request has been accepted and will be processed asap.");
+	public static final CommandResponse processing(String request){
+		return using("Your request '"+request+"' has been accepted and will be processed asap.");
 	}
 	public String text() {
 		return text;
