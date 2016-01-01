@@ -15,4 +15,10 @@ public class Normalized {
 	public String toString() {
 		return "Normalized [value=" + value + ", unit=" + unit + "]";
 	}
+	public int value() {
+		return value;
+	}
+	public DurationUnit unit() {
+		return unit;
+	}
 }

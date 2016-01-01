@@ -30,6 +30,7 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
 import org.glassfish.tyrus.client.ClientManager;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import uk.co.sangharsh.nlp.resource.pojo.Conversation;
 import uk.co.sangharsh.nlp.resource.pojo.Utterance;
+import ai.wit.api.client.pojo.Normalized;
 
 import com.slack.api.client.form.CommandForm;
 import com.slack.api.client.form.CommandResponse;
@@ -128,12 +130,13 @@ public class SlackClientImpl implements SlackClient {
 
 	public static final String BOT_TOKEN = "xoxp-16665703089-16666379522-16669191650-a785839479";
 	
-	private ChannelHistoryResponse channelHistory(String latest) {
+	private ChannelHistoryResponse channelHistory(String latest, final long oldest) {
 		Map<String, String> params = new HashMap<String, String>(){{
 			put(Param.TOKEN, BOT_TOKEN);
 			put(Param.CHANNEL, CHANNEL);
 			put(Param.COUNT, "1000");
 			put(Param.UNREADS, "1");
+			put(Param.OLDEST, ""+oldest);
 		}};
 		if(StringUtils.isNotBlank(latest)){
 			params.put(Param.LATEST, latest);
@@ -144,14 +147,29 @@ public class SlackClientImpl implements SlackClient {
 	@Override
 	public void respondTo(CommandForm commandForm) {
 		ai.wit.api.client.pojo.Message witResponse = witClient.query(commandForm.text());
-		System.out.println(witResponse.firstOutcome().entities().firstDuration().normalized());
-		
+		Normalized normalized = witResponse.firstOutcome().entities().firstDuration().normalized();
+		System.out.println(normalized);
+		long oldest;
+		switch (normalized.unit()) {
+		case hour:
+			oldest = new DateTime().minusHours(normalized.value()).getMillis()/1000;
+			break;
+		case minute:
+			oldest = new DateTime().minusMinutes(normalized.value()).getMillis()/1000;
+			break;
+		case second:
+		default:
+			oldest = new DateTime().minusSeconds(normalized.value()).getMillis()/1000;
+			break;
+		}
+		DateTime dateTime = new DateTime();
+		dateTime.minusSeconds(normalized.value());
 		
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
 		String latest = null;
 		do {
-			channelHistory = channelHistory(latest);
+			channelHistory = channelHistory(latest, oldest);
 			List<Message> messagesChunk = channelHistory.messages();
 			messages.addAll(messagesChunk);
 			latest = messagesChunk.isEmpty() ? null : messagesChunk.get(messagesChunk.size()-1).ts();
