@@ -163,7 +163,7 @@ public class SlackClientImpl implements SlackClient {
 		Conversation conversation = new Conversation();
 		for(Message message: messages){
 //			if(!message.isToIgnore()){
-				conversation.add(Utterance.utterance(" <@"+message.user()+">", message.text()));
+				conversation.add(Utterance.utterance(" <@"+message.user()+"> _", message.text()+"_"));
 //			}
 		}
 		final List<String> docs = nlpClient.summarize(conversation);
