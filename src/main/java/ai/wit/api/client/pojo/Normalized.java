@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.joda.time.DateTime;
+
 import ai.wit.api.client.DurationUnit;
 
 @XmlRootElement
@@ -15,10 +17,10 @@ public class Normalized {
 	public String toString() {
 		return "Normalized [value=" + value + ", unit=" + unit + "]";
 	}
-	public int value() {
-		return value;
-	}
 	public DurationUnit unit() {
 		return unit;
+	}
+	public long getDateTime(){
+		return new DateTime().minusSeconds(value).getMillis()/1000;
 	}
 }

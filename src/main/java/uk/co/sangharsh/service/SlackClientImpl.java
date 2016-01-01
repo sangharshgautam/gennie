@@ -148,13 +148,11 @@ public class SlackClientImpl implements SlackClient {
 	public void respondTo(CommandForm commandForm) {
 		ai.wit.api.client.pojo.Message witResponse = witClient.query(commandForm.text());
 		Normalized normalized = witResponse.firstOutcome().entities().firstDuration().normalized();
-		System.out.println(normalized);
-		long oldest = new DateTime().minusSeconds(normalized.value()).getMillis()/1000;
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
 		String latest = null;
 		do {
-			channelHistory = channelHistory(latest, oldest);
+			channelHistory = channelHistory(latest, normalized.getDateTime());
 			List<Message> messagesChunk = channelHistory.messages();
 			messages.addAll(messagesChunk);
 			latest = messagesChunk.isEmpty() ? null : messagesChunk.get(messagesChunk.size()-1).ts();
