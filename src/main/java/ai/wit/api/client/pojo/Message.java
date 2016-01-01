@@ -1,4 +1,4 @@
-package ai.wit;
+package ai.wit.api.client.pojo;
 
 import java.util.List;
 
@@ -17,4 +17,8 @@ public class Message {
 	private String text;
 	
 	private List<Outcome> outcomes;
+	
+	public Outcome firstOutcome(){
+		return outcomes.isEmpty() ?  null : outcomes.get(0);
+	}
 }

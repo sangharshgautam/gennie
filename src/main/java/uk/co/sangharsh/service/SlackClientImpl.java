@@ -71,6 +71,9 @@ public class SlackClientImpl implements SlackClient {
 	
 	private static final String SENT_MESSAGE = "Hello World";
 	
+	@Autowired
+	private WitClient witClient;
+	
 	@PostConstruct
 	public void setClientProperties(){
 		ClientConfig cc = new ClientConfig()
@@ -140,6 +143,10 @@ public class SlackClientImpl implements SlackClient {
 	@Async
 	@Override
 	public void respondTo(CommandForm commandForm) {
+		ai.wit.api.client.pojo.Message witResponse = witClient.query(commandForm.text());
+		System.out.println(witResponse.firstOutcome().entities().firstDuration().normalized());
+		
+		
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
 		String latest = null;

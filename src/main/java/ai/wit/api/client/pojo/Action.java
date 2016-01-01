@@ -1,4 +1,4 @@
-package ai.wit;
+package ai.wit.api.client.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
