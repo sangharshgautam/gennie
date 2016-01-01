@@ -149,22 +149,7 @@ public class SlackClientImpl implements SlackClient {
 		ai.wit.api.client.pojo.Message witResponse = witClient.query(commandForm.text());
 		Normalized normalized = witResponse.firstOutcome().entities().firstDuration().normalized();
 		System.out.println(normalized);
-		long oldest;
-		switch (normalized.unit()) {
-		case hour:
-			oldest = new DateTime().minusHours(normalized.value()).getMillis()/1000;
-			break;
-		case minute:
-			oldest = new DateTime().minusMinutes(normalized.value()).getMillis()/1000;
-			break;
-		case second:
-		default:
-			oldest = new DateTime().minusSeconds(normalized.value()).getMillis()/1000;
-			break;
-		}
-		DateTime dateTime = new DateTime();
-		dateTime.minusSeconds(normalized.value());
-		
+		long oldest = new DateTime().minusSeconds(normalized.value()).getMillis()/1000;
 		List<Message> messages = new ArrayList<>();
 		ChannelHistoryResponse channelHistory ;
 		String latest = null;
@@ -177,9 +162,9 @@ public class SlackClientImpl implements SlackClient {
 			
 		Conversation conversation = new Conversation();
 		for(Message message: messages){
-			if(!message.isToIgnore()){
+//			if(!message.isToIgnore()){
 				conversation.add(Utterance.utterance(" <@"+message.user()+">", message.text()));
-			}
+//			}
 		}
 		final List<String> docs = nlpClient.summarize(conversation);
 		StringBuilder respBuilder = new StringBuilder();

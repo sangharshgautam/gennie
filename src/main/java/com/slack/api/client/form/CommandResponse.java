@@ -7,11 +7,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.slack.api.client.type.ResponseType;
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CommandResponse {
 	@XmlElement(name = "response_type")
-	private String responseType;
+	private String responseType = ResponseType.IN_CHANNEL;
 	
 	@XmlElement
 	private String text;
