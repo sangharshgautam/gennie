@@ -2,7 +2,7 @@ package com.slack.api.client.type;
 
 import org.apache.commons.lang3.StringUtils;
 
-public interface A {
+public interface SlackApi {
 	public enum Channel implements Scope{
 		WRITE,
 		HISTORY,

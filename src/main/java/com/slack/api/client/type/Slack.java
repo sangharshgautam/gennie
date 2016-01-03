@@ -9,45 +9,57 @@ public class Slack {
 		public String mName(){
 			return StringUtils.join("api", ".", this.toString().toLowerCase());
 		}
+		@Override
+		public Scope scope() {
+			return null;
+		}
 	}
 	public enum Channel implements Method{
-		ARCHIVE(com.slack.api.client.type.A.Channel.WRITE),
-		CREATE(com.slack.api.client.type.A.Channel.WRITE),
-		INVITE(com.slack.api.client.type.A.Channel.WRITE),
-		JOIN(com.slack.api.client.type.A.Channel.WRITE),
-		KICK(com.slack.api.client.type.A.Channel.WRITE),
-		LEAVE(com.slack.api.client.type.A.Channel.WRITE),
-		MARK(com.slack.api.client.type.A.Channel.WRITE),
-		RENAME(com.slack.api.client.type.A.Channel.WRITE),
-		SET_PURPOSE(com.slack.api.client.type.A.Channel.WRITE),
-		SET_TOPIC(com.slack.api.client.type.A.Channel.WRITE),
-		UNARCHIVE(com.slack.api.client.type.A.Channel.WRITE),
+		ARCHIVE(SlackApi.Channel.WRITE),
+		CREATE(SlackApi.Channel.WRITE),
+		INVITE(SlackApi.Channel.WRITE),
+		JOIN(SlackApi.Channel.WRITE),
+		KICK(SlackApi.Channel.WRITE),
+		LEAVE(SlackApi.Channel.WRITE),
+		MARK(SlackApi.Channel.WRITE),
+		RENAME(SlackApi.Channel.WRITE),
+		SET_PURPOSE(SlackApi.Channel.WRITE),
+		SET_TOPIC(SlackApi.Channel.WRITE),
+		UNARCHIVE(SlackApi.Channel.WRITE),
 		
-		HISTORY(com.slack.api.client.type.A.Channel.HISTORY),
+		HISTORY(SlackApi.Channel.HISTORY),
 		
-		INFO(com.slack.api.client.type.A.Channel.READ),
-		LIST(com.slack.api.client.type.A.Channel.READ);
+		INFO(SlackApi.Channel.READ),
+		LIST(SlackApi.Channel.READ);
 		
-		private com.slack.api.client.type.A.Channel scope;;
-		Channel(com.slack.api.client.type.A.Channel scope){
+		private SlackApi.Channel scope;
+		Channel(SlackApi.Channel scope){
 			this.scope = scope;
 		}
 		public String mName(){
 			return StringUtils.join("channels", ".", this.toString().toLowerCase());
 		}
+		@Override
+		public Scope scope() {
+			return this.scope;
+		}
 	}
 	public enum Chat implements Method{
-		DELETE(com.slack.api.client.type.A.Chat.WRITE_USER),
-		UPDATE(com.slack.api.client.type.A.Chat.WRITE_USER),
-		POST_MESSAGE(com.slack.api.client.type.A.Chat.WRITE_USER),
+		DELETE(SlackApi.Chat.WRITE_USER),
+		UPDATE(SlackApi.Chat.WRITE_USER),
+		POST_MESSAGE(SlackApi.Chat.WRITE_USER),
 		;
 		
-		private com.slack.api.client.type.A.Chat scope;;
-		Chat(com.slack.api.client.type.A.Chat scope){
+		private SlackApi.Chat scope;
+		Chat(SlackApi.Chat scope){
 			this.scope = scope;
 		}
 		public String mName(){
 			return StringUtils.join("chat", ".", camelize(this.toString()));
+		}
+		@Override
+		public Scope scope() {
+			return this.scope;
 		}
 	}
 	private static String camelize(String cn) {
