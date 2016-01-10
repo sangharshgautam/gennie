@@ -17,7 +17,7 @@ import uk.co.sangharsh.nlp.resource.pojo.SummarizeRequest;
 @Service
 public class NlpClientImpl implements NlpClient {
 
-	private static final String nlpBaseUrl = "http://nlp-telegenie2.rhcloud.com/api";
+	private static final String nlpBaseUrl = "http://52.48.32.80:8080/nlp/api";
 	private Client client = ClientBuilder.newClient().register(LoggingFilter.class);
 	
 	@Override
