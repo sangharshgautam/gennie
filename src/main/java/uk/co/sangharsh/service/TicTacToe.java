@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.client.pojo.ReplyKeyboardMarkup;
 import org.telegram.client.pojo.SendableImage;
@@ -73,74 +74,37 @@ public class TicTacToe extends TwinPlayerGame{
 	public TicTacToe move(Command command) throws IOException {
 		String string = command.toString();
 		if(StringUtils.length(string) == 2){
-			
 			String player = string.substring(0, 1);
 			BufferedImage playerBi = ImageIO.read(new File(getThisCLassLoader().getResource(player.toLowerCase()+".png").getFile()));
 			
-			int block = Integer.parseInt(string.substring(1, 2));
-			switch (block) {
-			case 1:
-				this.matrix[0][0] = player;
-				drawMove(playerBi, 0+50, 0+100);
-				break;
-			case 2:
-				this.matrix[0][1] = player;
-				drawMove(playerBi, 110+50, 0+100);
-				break;
-			case 3:
-				this.matrix[0][2] = player;
-				drawMove(playerBi, 220+50, 0+100);
-				break;
-			case 4:
-				this.matrix[1][0] = player;
-				drawMove(playerBi, 0+50, 110+100);
-				break;
-			case 5:
-				this.matrix[1][1] = player;
-				drawMove(playerBi, 110+50, 110+100);
-				break;
-			case 6:
-				this.matrix[1][2] = player;
-				drawMove(playerBi, 220+50, 110+100);
-				break;
-			case 7:
-				this.matrix[2][0] = player;
-				drawMove(playerBi, 0+50, 220+100);
-				break;
-			case 8:
-				this.matrix[2][1] = player;
-				drawMove(playerBi, 110+50, 220+100);
-				break;
-			case 9:
-				this.matrix[2][2] = player;
-				drawMove(playerBi, 220+50, 220+100);
-			default:
-				break;
-			}
-				
+			Move move = Move.valueOf(string);
+			this.matrix[move.getIndexX()][move.getIndexY()] = player;
+			drawMove(playerBi, move);
 		}
-		boolean over = checkMate();
+		boolean mate = checkMate();
+		System.out.println("Command "+command+" End: "+mate);
 		return this;
 	}
 
 	private boolean checkMate() {
-		for(int i = 0 ;i < this.matrix.length ;i++){
-			boolean line = checkLine(this.matrix[i]);
-			if(line){
-				drawLine(i);
-			}
-		}
-		return false;
+		boolean xaxis = checkLine(matrix[0][0], matrix[1][0], matrix[2][0]);
+		boolean yaxis = checkLine(matrix[0][0], matrix[0][1], matrix[0][2]);
+		boolean diagonal1 = checkLine(matrix[0][0], matrix[1][1], matrix[2][2]);
+		boolean diagonal2 = checkLine(matrix[2][0], matrix[1][1], matrix[0][2]);
+		boolean checkmate = BooleanUtils.xor(new boolean[]{xaxis, yaxis, diagonal1, diagonal2});
+		return checkmate;
 	}
 
-	private boolean checkLine(String[] row) {
-		String mark = row[0];
-		for(String colMark : row){
-			if(!mark.equals(colMark)){
-				return false;
+	private boolean checkLine(String... row) {
+		if(StringUtils.isAnyBlank(row)){
+			return false;
+		}else{
+			boolean end = row[0].equals(row[1]) && row[1].equals(row[2]);
+			if(end){
+//				drawLine(row);
 			}
+			return end; 
 		}
-		return WHITE_SPACE.equals(mark);
 	}
 
 	private ClassLoader getThisCLassLoader() {
@@ -162,14 +126,17 @@ public class TicTacToe extends TwinPlayerGame{
 			break;
 		}
 	}
-	private void drawMove(BufferedImage playerBi, int x, int y) {
-		this.template.getGraphics().drawImage(playerBi, x, y, playerBi.getWidth(), playerBi.getHeight(), null);
+	private void drawMove(BufferedImage playerBi, Move move) {
+		this.template.getGraphics().drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws IOException {
-		TicTacToe game = new TicTacToe(null);
-		System.out.println(new Gson().toJson(game.keyboardX()));
-		System.out.println(new Gson().toJson(game.move(Command.X2).keyboardX()));
-		System.out.println(new Gson().toJson(game.move(Command.X5).keyboardX()));
+//		System.out.println(new Gson().toJson(game.keyboardX()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X2).move(Command.X1).move(Command.X3).keyboardX()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X5).move(Command.X1).move(Command.X9).keyboardX()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X5).move(Command.X7).keyboardX()));
+		
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X4).move(Command.X7).keyboardX()));
+//		System.out.println(new Gson().toJson(game.move(Command.X5).keyboardX()));
 	}
 
 	public SendableImage reply(String command) throws IOException {
