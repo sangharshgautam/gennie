@@ -18,6 +18,8 @@ import com.google.gson.Gson;
 
 public class TicTacToe extends TwinPlayerGame{
 
+	private static final String WHITE_SPACE = " ";
+
 	private String[][] matrix;
 	
 	private BufferedImage template;
@@ -57,7 +59,7 @@ public class TicTacToe extends TwinPlayerGame{
 				if(StringUtils.isBlank(button)){
 					row.add(player+((3*i)+j));
 				}else{
-					row.add(" ");
+					row.add(WHITE_SPACE);
 				}
 			}
 			keyboard.add(row);
@@ -71,57 +73,96 @@ public class TicTacToe extends TwinPlayerGame{
 	public TicTacToe move(Command command) throws IOException {
 		String string = command.toString();
 		if(StringUtils.length(string) == 2){
-			ClassLoader classLoader = getClass().getClassLoader();
 			
 			String player = string.substring(0, 1);
-			BufferedImage playerBi = ImageIO.read(new File(classLoader.getResource(player.toLowerCase()+".png").getFile()));
+			BufferedImage playerBi = ImageIO.read(new File(getThisCLassLoader().getResource(player.toLowerCase()+".png").getFile()));
 			
 			int block = Integer.parseInt(string.substring(1, 2));
 			switch (block) {
 			case 1:
 				this.matrix[0][0] = player;
-				this.template.getGraphics().drawImage(playerBi, 0+50, 0+100, playerBi.getWidth(), playerBi.getHeight(), null);
+				drawMove(playerBi, 0+50, 0+100);
 				break;
 			case 2:
 				this.matrix[0][1] = player;
-				this.template.getGraphics().drawImage(playerBi, 110+50, 0+100, playerBi.getWidth(), playerBi.getHeight(), null);
+				drawMove(playerBi, 110+50, 0+100);
 				break;
 			case 3:
 				this.matrix[0][2] = player;
-				this.template.getGraphics().drawImage(playerBi, 220+50, 0+100, playerBi.getWidth(), playerBi.getHeight(), null);
+				drawMove(playerBi, 220+50, 0+100);
 				break;
 			case 4:
 				this.matrix[1][0] = player;
-				draw(playerBi, 0+50, 110+100);
+				drawMove(playerBi, 0+50, 110+100);
 				break;
 			case 5:
 				this.matrix[1][1] = player;
-				draw(playerBi, 110+50, 110+100);
+				drawMove(playerBi, 110+50, 110+100);
 				break;
 			case 6:
 				this.matrix[1][2] = player;
-				draw(playerBi, 220+50, 110+100);
+				drawMove(playerBi, 220+50, 110+100);
 				break;
 			case 7:
 				this.matrix[2][0] = player;
-				draw(playerBi, 0+50, 220+100);
+				drawMove(playerBi, 0+50, 220+100);
 				break;
 			case 8:
 				this.matrix[2][1] = player;
-				draw(playerBi, 110+50, 220+100);
+				drawMove(playerBi, 110+50, 220+100);
 				break;
 			case 9:
 				this.matrix[2][2] = player;
-				draw(playerBi, 220+50, 220+100);
+				drawMove(playerBi, 220+50, 220+100);
 			default:
 				break;
 			}
 				
 		}
+		boolean over = checkMate();
 		return this;
 	}
 
-	private void draw(BufferedImage playerBi, int x, int y) {
+	private boolean checkMate() {
+		for(int i = 0 ;i < this.matrix.length ;i++){
+			boolean line = checkLine(this.matrix[i]);
+			if(line){
+				drawLine(i);
+			}
+		}
+		return false;
+	}
+
+	private boolean checkLine(String[] row) {
+		String mark = row[0];
+		for(String colMark : row){
+			if(!mark.equals(colMark)){
+				return false;
+			}
+		}
+		return WHITE_SPACE.equals(mark);
+	}
+
+	private ClassLoader getThisCLassLoader() {
+		ClassLoader classLoader = getClass().getClassLoader();
+		return classLoader;
+	}
+	private void drawLine(int i) {
+		switch (i) {
+		case 1:
+			this.template.getGraphics().drawLine(0+50, 0+100, 220, 0+100);
+			break;
+		case 2:
+			this.template.getGraphics().drawLine(110+50, 0+100, 220, 110+100);
+			break;
+		case 3:
+			this.template.getGraphics().drawLine(220+50, 0+100, 220, 220+100);
+			break;
+		default:
+			break;
+		}
+	}
+	private void drawMove(BufferedImage playerBi, int x, int y) {
 		this.template.getGraphics().drawImage(playerBi, x, y, playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws IOException {
