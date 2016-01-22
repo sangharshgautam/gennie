@@ -24,6 +24,8 @@ public class TicTacToe extends TwinPlayerGame{
 	private String[][] matrix;
 	
 	private BufferedImage template;
+
+	private Player player;
 	
 	public TicTacToe(User playerOne) throws IOException {
 		super(playerOne);
@@ -39,18 +41,11 @@ public class TicTacToe extends TwinPlayerGame{
 		template.getGraphics().drawImage(originalImg, 0, 0, originalImg.getWidth(), originalImg.getHeight(), null);
 	}
 
-	public List<List<String>> keyboardX() {
-		return keyboard("X");
-	}
-	public List<List<String>> keyboardO() {
-		return keyboard("O");
+	public List<List<String>> keyboard() {
+		return keyboard(this.player);
 	}
 
-	private List<List<String>> keyboard(String p) {
-		String player = p;
-		if(p.trim().length() >1){
-			player = p.substring(0, 1);
-		}
+	private List<List<String>> keyboard(Player player) {
 		List<List<String>> keyboard = new ArrayList<List<String>>();
 		for(int i=0;i<matrix.length ; i++){
 			String[] data = matrix[i];
@@ -58,7 +53,7 @@ public class TicTacToe extends TwinPlayerGame{
 			for(int j = 1; j<=data.length;j++){
 				String button = data[j-1];
 				if(StringUtils.isBlank(button)){
-					row.add(player+((3*i)+j));
+					row.add(player.toString()+((3*i)+j));
 				}else{
 					row.add(WHITE_SPACE);
 				}
@@ -77,13 +72,21 @@ public class TicTacToe extends TwinPlayerGame{
 			String player = string.substring(0, 1);
 			BufferedImage playerBi = ImageIO.read(new File(getThisCLassLoader().getResource(player.toLowerCase()+".png").getFile()));
 			
-			Move move = Move.valueOf(string);
+			Move move = Move.valueOf("MOVE"+string.substring(1, 2));
 			this.matrix[move.getIndexX()][move.getIndexY()] = player;
 			drawMove(playerBi, move);
 		}
 		boolean mate = checkMate();
+		if(!mate){
+			systemMove();
+		}
 		System.out.println("Command "+command+" End: "+mate);
 		return this;
+	}
+
+	private void systemMove() {
+		//check own doubles to win
+		
 	}
 
 	private boolean checkMate() {
@@ -131,11 +134,11 @@ public class TicTacToe extends TwinPlayerGame{
 	}
 	public static void main(String[] args) throws IOException {
 //		System.out.println(new Gson().toJson(game.keyboardX()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X2).move(Command.X1).move(Command.X3).keyboardX()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X5).move(Command.X1).move(Command.X9).keyboardX()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X5).move(Command.X7).keyboardX()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X2).move(Command.X1).move(Command.X3).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X5).move(Command.X1).move(Command.X9).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
 		
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X4).move(Command.X7).keyboardX()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X4).move(Command.X7).keyboard()));
 //		System.out.println(new Gson().toJson(game.move(Command.X5).keyboardX()));
 	}
 
@@ -146,7 +149,7 @@ public class TicTacToe extends TwinPlayerGame{
 		if(command.trim().length() >1){
 			player = command.substring(0, 1);
 		}
-		List<List<String>> keyboard = keyboard(player);
+		List<List<String>> keyboard = keyboard(Player.valueOf(player));
 		return SendableImage.create("Enter your move", ReplyKeyboardMarkup.selective(keyboard).oneTime(), file );
 	}
 
@@ -154,5 +157,10 @@ public class TicTacToe extends TwinPlayerGame{
 		File file = File.createTempFile("tictactoe", ""+System.currentTimeMillis()+".png");
 		ImageIO.write(template, "png", file);
 		return file;
+	}
+
+	public TicTacToe set(Player player) {
+		this.player = player;
+		return this;
 	}
 }
