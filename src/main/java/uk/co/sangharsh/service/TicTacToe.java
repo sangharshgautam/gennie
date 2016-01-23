@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.client.pojo.ReplyKeyboardMarkup;
@@ -21,7 +22,7 @@ public class TicTacToe extends TwinPlayerGame{
 
 	private static final String WHITE_SPACE = " ";
 
-	private String[] matrix;
+	private PlayerMove[] matrix;
 	
 	private BufferedImage template;
 
@@ -29,7 +30,7 @@ public class TicTacToe extends TwinPlayerGame{
 	
 	public TicTacToe(User playerOne) throws IOException {
 		super(playerOne);
-		this.matrix  = new String[9];
+		this.matrix  = new PlayerMove[9];
 		setTemplate();
 	}
 
@@ -68,7 +69,7 @@ public class TicTacToe extends TwinPlayerGame{
 		return keyboard;
 	}
 	private String matrixValue(int index) {
-		return StringUtils.defaultIfBlank(matrix[index], WHITE_SPACE);
+		return matrix[index] !=null ? WHITE_SPACE : this.player.toString()+(index+1);
 	}
 	public TicTacToe move(Command command) throws IOException {
 		String string = command.toString();
@@ -77,7 +78,7 @@ public class TicTacToe extends TwinPlayerGame{
 			BufferedImage playerBi = ImageIO.read(new File(getThisCLassLoader().getResource(player.toLowerCase()+".png").getFile()));
 			
 			Move move = Move.valueOf("MOVE"+string.substring(1, 2));
-			this.matrix[move.getIndex()] = player;
+			this.matrix[move.getIndex()] = new PlayerMove(this.player, move);
 			drawMove(playerBi, move);
 		}
 		boolean mate = checkMate();
@@ -115,13 +116,13 @@ public class TicTacToe extends TwinPlayerGame{
 		return checkmate;
 	}
 
-	private boolean checkLine(String... row) {
-		if(StringUtils.isAnyBlank(row)){
+	private boolean checkLine(PlayerMove... row) {
+		if(ArrayUtils.contains(row, null)){
 			return false;
 		}else{
-			boolean end = row[0].equals(row[1]) && row[1].equals(row[2]);
+			boolean end = row[0].player().equals(row[1].player()) && row[1].player().equals(row[2].player());
 			if(end){
-//				drawLine(row[0]);
+				drawLine(row[0], row[2]);
 			}
 			return end; 
 		}
@@ -131,25 +132,31 @@ public class TicTacToe extends TwinPlayerGame{
 		ClassLoader classLoader = getClass().getClassLoader();
 		return classLoader;
 	}
-	private void drawLine(Move a, Move b) {
-		this.template.getGraphics().drawLine(a.getX(), a.getY(), b.getX(), b.getY());
+	private void drawLine(PlayerMove a, PlayerMove b) {
+		this.template.getGraphics().drawLine(a.move().getX(), a.move().getY(), b.move().getX(), b.move().getY());
 	}
 	private void drawMove(BufferedImage playerBi, Move move) {
 		this.template.getGraphics().drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws IOException {
-//		System.out.println(new Gson().toJson(game.keyboardX()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X2).move(Command.X3).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X4).move(Command.X5).move(Command.X6).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X7).move(Command.X8).move(Command.X9).keyboard()));
+		Gson gson = new Gson();
+
+		System.out.println(new Gson().toJson(new ArrayList<String>(){{
+			add("Abs");
+		}}));
+		List<List<String>> keyboard = new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X2).move(Command.X3).keyboard();
 		
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X4).move(Command.X7).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X2).move(Command.X5).move(Command.X8).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X6).move(Command.X9).keyboard()));
+		System.out.println(gson.toJson(keyboard));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X4).move(Command.X5).move(Command.X6).keyboard()));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X7).move(Command.X8).move(Command.X9).keyboard()));
+		
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X4).move(Command.X7).keyboard()));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X2).move(Command.X5).move(Command.X8).keyboard()));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X3).move(Command.X6).move(Command.X9).keyboard()));
 		
 		
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X5).move(Command.X9).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X5).move(Command.X9).keyboard()));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
 //		System.out.println(new Gson().toJson(game.move(Command.X5).keyboardX()));
 	}
 
