@@ -48,25 +48,21 @@ public class TicTacToe extends TwinPlayerGame{
 
 	private List<List<String>> keyboard(Player player) {
 		List<List<String>> keyboard = new ArrayList<List<String>>();
-		keyboard.add(new ArrayList<String>(){{
-			add(matrixValue(0));
-			add(matrixValue(1));
-			add(matrixValue(2));
-		}});
-		keyboard.add(new ArrayList<String>(){{
-			add(matrixValue(3));
-			add(matrixValue(4));
-			add(matrixValue(5));
-		}});
-		keyboard.add(new ArrayList<String>(){{
-			add(matrixValue(6));
-			add(matrixValue(7));
-			add(matrixValue(8));
-		}});
-		keyboard.add(new ArrayList<String>(){{
-			add(Command.QUIT.toString());
-		}});
+		keyboard.add(getRow(1));
+		keyboard.add(getRow(2));
+		keyboard.add(getRow(3));
+		List<String> quitRow = new ArrayList<String>();
+		quitRow.add(Command.QUIT.toString());
+		keyboard.add(quitRow);
 		return keyboard;
+	}
+
+	private List<String> getRow(int index) {
+		List<String> row = new ArrayList<String>();
+		row.add(matrixValue(index-1));
+		row.add(matrixValue(index));
+		row.add(matrixValue(index+1));
+		return row;
 	}
 	private String matrixValue(int index) {
 		return matrix[index] !=null ? WHITE_SPACE : this.player.toString()+(index+1);
@@ -141,9 +137,7 @@ public class TicTacToe extends TwinPlayerGame{
 	public static void main(String[] args) throws IOException {
 		Gson gson = new Gson();
 
-		System.out.println(new Gson().toJson(new ArrayList<String>(){{
-			add("Abs");
-		}}));
+//		System.out.println(new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(src));
 		List<List<String>> keyboard = new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X2).move(Command.X3).keyboard();
 		
 		System.out.println(gson.toJson(keyboard));
@@ -157,7 +151,7 @@ public class TicTacToe extends TwinPlayerGame{
 		
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X5).move(Command.X9).keyboard()));
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
-//		System.out.println(new Gson().toJson(game.move(Command.X5).keyboardX()));
+
 	}
 
 	public SendableImage reply(String command) throws IOException {
