@@ -21,7 +21,7 @@ public class TicTacToe extends TwinPlayerGame{
 
 	private static final String WHITE_SPACE = " ";
 
-	private String[][] matrix;
+	private String[] matrix;
 	
 	private BufferedImage template;
 
@@ -29,7 +29,7 @@ public class TicTacToe extends TwinPlayerGame{
 	
 	public TicTacToe(User playerOne) throws IOException {
 		super(playerOne);
-		this.matrix  = new String[3][3];
+		this.matrix  = new String[9];
 		setTemplate();
 	}
 
@@ -47,25 +47,29 @@ public class TicTacToe extends TwinPlayerGame{
 
 	private List<List<String>> keyboard(Player player) {
 		List<List<String>> keyboard = new ArrayList<List<String>>();
-		for(int i=0;i<matrix.length ; i++){
-			String[] data = matrix[i];
-			List<String> row = new ArrayList<String>();
-			for(int j = 1; j<=data.length;j++){
-				String button = data[j-1];
-				if(StringUtils.isBlank(button)){
-					row.add(player.toString()+((3*i)+j));
-				}else{
-					row.add(WHITE_SPACE);
-				}
-			}
-			keyboard.add(row);
-		}
+		keyboard.add(new ArrayList<String>(){{
+			add(matrixValue(0));
+			add(matrixValue(1));
+			add(matrixValue(2));
+		}});
+		keyboard.add(new ArrayList<String>(){{
+			add(matrixValue(3));
+			add(matrixValue(4));
+			add(matrixValue(5));
+		}});
+		keyboard.add(new ArrayList<String>(){{
+			add(matrixValue(6));
+			add(matrixValue(7));
+			add(matrixValue(8));
+		}});
 		keyboard.add(new ArrayList<String>(){{
 			add(Command.QUIT.toString());
 		}});
 		return keyboard;
 	}
-
+	private String matrixValue(int index) {
+		return StringUtils.defaultIfBlank(matrix[index], WHITE_SPACE);
+	}
 	public TicTacToe move(Command command) throws IOException {
 		String string = command.toString();
 		if(StringUtils.length(string) == 2){
@@ -73,7 +77,7 @@ public class TicTacToe extends TwinPlayerGame{
 			BufferedImage playerBi = ImageIO.read(new File(getThisCLassLoader().getResource(player.toLowerCase()+".png").getFile()));
 			
 			Move move = Move.valueOf("MOVE"+string.substring(1, 2));
-			this.matrix[move.getIndexX()][move.getIndexY()] = player;
+			this.matrix[move.getIndex()] = player;
 			drawMove(playerBi, move);
 		}
 		boolean mate = checkMate();
@@ -86,15 +90,28 @@ public class TicTacToe extends TwinPlayerGame{
 
 	private void systemMove() {
 		//check own doubles to win
+//		isWinningMove(matrix[0][0], matrix[0][1], matrix[0][2]);
+	}
+
+
+	private void isWinningMove(String...row) {
+		Player system = this.player.getOpponent();
 		
 	}
 
 	private boolean checkMate() {
-		boolean xaxis = checkLine(matrix[0][0], matrix[1][0], matrix[2][0]);
-		boolean yaxis = checkLine(matrix[0][0], matrix[0][1], matrix[0][2]);
-		boolean diagonal1 = checkLine(matrix[0][0], matrix[1][1], matrix[2][2]);
-		boolean diagonal2 = checkLine(matrix[2][0], matrix[1][1], matrix[0][2]);
-		boolean checkmate = BooleanUtils.xor(new boolean[]{xaxis, yaxis, diagonal1, diagonal2});
+		boolean row1 = checkLine(matrix[0], matrix[1], matrix[2]);
+		boolean row2 = checkLine(matrix[3], matrix[4], matrix[5]);
+		boolean row3 = checkLine(matrix[6], matrix[7], matrix[8]);
+		
+		boolean col1 = checkLine(matrix[0], matrix[3], matrix[6]);
+		boolean col2 = checkLine(matrix[1], matrix[4], matrix[7]);
+		boolean col3 = checkLine(matrix[2], matrix[5], matrix[8]);
+		
+		
+		boolean diagonal1 = checkLine(matrix[0], matrix[4], matrix[8]);
+		boolean diagonal2 = checkLine(matrix[2], matrix[4], matrix[6]);
+		boolean checkmate = BooleanUtils.xor(new boolean[]{row1, row2, row3, col1, col2, col3, diagonal1, diagonal2});
 		return checkmate;
 	}
 
@@ -104,7 +121,7 @@ public class TicTacToe extends TwinPlayerGame{
 		}else{
 			boolean end = row[0].equals(row[1]) && row[1].equals(row[2]);
 			if(end){
-//				drawLine(row);
+//				drawLine(row[0]);
 			}
 			return end; 
 		}
@@ -114,31 +131,25 @@ public class TicTacToe extends TwinPlayerGame{
 		ClassLoader classLoader = getClass().getClassLoader();
 		return classLoader;
 	}
-	private void drawLine(int i) {
-		switch (i) {
-		case 1:
-			this.template.getGraphics().drawLine(0+50, 0+100, 220, 0+100);
-			break;
-		case 2:
-			this.template.getGraphics().drawLine(110+50, 0+100, 220, 110+100);
-			break;
-		case 3:
-			this.template.getGraphics().drawLine(220+50, 0+100, 220, 220+100);
-			break;
-		default:
-			break;
-		}
+	private void drawLine(Move a, Move b) {
+		this.template.getGraphics().drawLine(a.getX(), a.getY(), b.getX(), b.getY());
 	}
 	private void drawMove(BufferedImage playerBi, Move move) {
 		this.template.getGraphics().drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws IOException {
 //		System.out.println(new Gson().toJson(game.keyboardX()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X2).move(Command.X1).move(Command.X3).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X5).move(Command.X1).move(Command.X9).keyboard()));
-		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X2).move(Command.X3).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X4).move(Command.X5).move(Command.X6).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X7).move(Command.X8).move(Command.X9).keyboard()));
 		
 		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X4).move(Command.X7).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X2).move(Command.X5).move(Command.X8).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X6).move(Command.X9).keyboard()));
+		
+		
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X1).move(Command.X5).move(Command.X9).keyboard()));
+		System.out.println(new Gson().toJson(new TicTacToe(null).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
 //		System.out.println(new Gson().toJson(game.move(Command.X5).keyboardX()));
 	}
 

@@ -104,7 +104,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 			case O:
 				Game game = this.games.get(from.getIdAsString());
 				TicTacToe ticTacToe = (TicTacToe)game;
-				reply = ticTacToe.reply(command.toString());
+				reply = ticTacToe.set(Player.valueOf(command.toString())).reply(command.toString());
 				break;
 			case O1:
 			case O2:
