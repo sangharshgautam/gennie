@@ -17,6 +17,7 @@ import org.telegram.client.pojo.User;
 import org.telegram.client.type.Command;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class TicTacToe extends TwinPlayerGame{
 
@@ -49,8 +50,8 @@ public class TicTacToe extends TwinPlayerGame{
 	private List<List<String>> keyboard(Player player) {
 		List<List<String>> keyboard = new ArrayList<List<String>>();
 		keyboard.add(getRow(1));
-		keyboard.add(getRow(2));
-		keyboard.add(getRow(3));
+		keyboard.add(getRow(4));
+		keyboard.add(getRow(7));
 		keyboard.add(getRow4());
 		return keyboard;
 	}
@@ -167,22 +168,24 @@ public class TicTacToe extends TwinPlayerGame{
 		this.template.getGraphics().drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws Exception {
-		Gson gson = new Gson();
-
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		System.out.println();
 //		System.out.println(new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(src));
-		List<List<String>> keyboard = new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X5).move(Command.X8).keyboard();
+		TicTacToe game = new TicTacToe(null).set(Player.X).move(Command.X1);
+		System.out.println(gson.toJson(game.keyboard()));
+		/*List<List<String>> keyboard = game.move(Command.X5).move(Command.X8).keyboard();
 		
 		System.out.println(gson.toJson(keyboard));
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X4).move(Command.X5).move(Command.X6).keyboard()));
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X7).move(Command.X8).move(Command.X9).keyboard()));
 		
-		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X4).move(Command.X7).keyboard()));
+		System.out.println(gson.toJson(game.move(Command.X4).move(Command.X7).keyboard()));
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X2).move(Command.X5).move(Command.X8).keyboard()));
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X3).move(Command.X6).move(Command.X9).keyboard()));
 		
 		
-		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X5).move(Command.X9).keyboard()));
-		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));
+		System.out.println(gson.toJson(game.move(Command.X5).move(Command.X9).keyboard()));
+		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X3).move(Command.X5).move(Command.X7).keyboard()));*/
 
 	}
 
