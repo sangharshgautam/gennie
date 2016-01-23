@@ -9,5 +9,5 @@ public interface UpdateProcessService {
 	public void pullUpdates();
 	public void pushUpdates(List<Update> updates);
 	public void push(Update update);
-	public void process() throws IOException;
+	public void process() throws IOException, Exception;
 }

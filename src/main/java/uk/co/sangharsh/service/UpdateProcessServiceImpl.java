@@ -60,7 +60,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	}
 
 	@Override
-	public void process() throws IOException {
+	public void process() throws Exception {
 		List<Update> updates = updateService.findUnprocessed();
 		for (Update update : updates) {
 			Telegram message = update.getMessage();

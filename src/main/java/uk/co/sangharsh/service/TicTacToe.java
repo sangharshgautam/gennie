@@ -51,10 +51,14 @@ public class TicTacToe extends TwinPlayerGame{
 		keyboard.add(getRow(1));
 		keyboard.add(getRow(2));
 		keyboard.add(getRow(3));
+		keyboard.add(getRow4());
+		return keyboard;
+	}
+
+	private List<String> getRow4() {
 		List<String> quitRow = new ArrayList<String>();
 		quitRow.add(Command.QUIT.toString());
-		keyboard.add(quitRow);
-		return keyboard;
+		return quitRow;
 	}
 
 	private List<String> getRow(int index) {
@@ -67,33 +71,61 @@ public class TicTacToe extends TwinPlayerGame{
 	private String matrixValue(int index) {
 		return matrix[index] !=null ? WHITE_SPACE : this.player.toString()+(index+1);
 	}
-	public TicTacToe move(Command command) throws IOException {
+	public TicTacToe move(Command command, Player player) throws Exception {
 		String string = command.toString();
 		if(StringUtils.length(string) == 2){
-			String player = string.substring(0, 1);
-			BufferedImage playerBi = ImageIO.read(new File(getThisCLassLoader().getResource(player.toLowerCase()+".png").getFile()));
-			
 			Move move = Move.valueOf("MOVE"+string.substring(1, 2));
-			this.matrix[move.getIndex()] = new PlayerMove(this.player, move);
-			drawMove(playerBi, move);
+			if(this.matrix[move.getIndex()] !=  null){
+				throw new Exception("Invalid Move");
+			}else{
+				this.matrix[move.getIndex()] = new PlayerMove(player, move);
+				drawMove(player.getImage(), move);
+			}
 		}
 		boolean mate = checkMate();
-		if(!mate){
-			systemMove();
+		if(!mate && player.equals(this.player)){
+			return systemMove();
 		}
-		System.out.println("Command "+command+" End: "+mate);
+		return this;
+	}
+	public TicTacToe move(Command command) throws Exception {
+		return move(command, this.player);
+	}
+	private TicTacToe systemMove() throws Exception {
+		//check own doubles to win
+		boolean winPossible = isWinningMove(matrix[0], matrix[1], matrix[2]);
+		if(winPossible){
+			winTheGame(matrix[0], matrix[1], matrix[2]);
+		}else{
+			for(int i =0;i<matrix.length;i++){
+				PlayerMove playerMove =  matrix[i];
+				if(playerMove == null){
+					return move(Command.valueOf(this.player.getOpponent().toString()+(i+1)), this.player.getOpponent());
+				}
+			}
+
+		}
 		return this;
 	}
 
-	private void systemMove() {
-		//check own doubles to win
-//		isWinningMove(matrix[0][0], matrix[0][1], matrix[0][2]);
+
+	private void winTheGame(PlayerMove... playerMoves) {
+		
 	}
 
-
-	private void isWinningMove(String...row) {
+	private boolean isWinningMove(PlayerMove...playerMoves) {
 		Player system = this.player.getOpponent();
-		
+		int counter =0;
+		for(PlayerMove playerMove : playerMoves){
+			if(playerMove!=null){
+				if(this.player.equals(playerMove.player())){
+					return false;
+				}else if(system.equals(playerMove.player())){
+					counter++;
+				}
+			}
+		}
+		return counter ==2;
 	}
 
 	private boolean checkMate() {
@@ -134,11 +166,11 @@ public class TicTacToe extends TwinPlayerGame{
 	private void drawMove(BufferedImage playerBi, Move move) {
 		this.template.getGraphics().drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
 	}
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		Gson gson = new Gson();
 
 //		System.out.println(new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(src));
-		List<List<String>> keyboard = new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X2).move(Command.X3).keyboard();
+		List<List<String>> keyboard = new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X5).move(Command.X8).keyboard();
 		
 		System.out.println(gson.toJson(keyboard));
 		System.out.println(gson.toJson(new TicTacToe(null).set(Player.X).move(Command.X4).move(Command.X5).move(Command.X6).keyboard()));
