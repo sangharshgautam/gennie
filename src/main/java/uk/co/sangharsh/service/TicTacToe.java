@@ -1,14 +1,17 @@
 package uk.co.sangharsh.service;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.telegram.client.pojo.ReplyKeyboardMarkup;
@@ -48,26 +51,15 @@ public class TicTacToe extends TwinPlayerGame{
 	}
 
 	private List<List<String>> keyboard(Player player) {
-		List<List<String>> keyboard = new ArrayList<List<String>>();
-		keyboard.add(getRow(1));
-		keyboard.add(getRow(4));
-		keyboard.add(getRow(7));
-		keyboard.add(getRow4());
-		return keyboard;
+		return Arrays.asList(getRow(1), getRow(4), getRow(7), getRow4());
 	}
 
 	private List<String> getRow4() {
-		List<String> quitRow = new ArrayList<String>();
-		quitRow.add(Command.QUIT.toString());
-		return quitRow;
+		return Arrays.asList(Command.QUIT.toString());
 	}
 
 	private List<String> getRow(int index) {
-		List<String> row = new ArrayList<String>();
-		row.add(matrixValue(index-1));
-		row.add(matrixValue(index));
-		row.add(matrixValue(index+1));
-		return row;
+		return Arrays.asList(matrixValue(index-1), matrixValue(index), matrixValue(index+1));
 	}
 	private String matrixValue(int index) {
 		return matrix[index] !=null ? WHITE_SPACE : this.player.toString()+(index+1);
@@ -76,10 +68,11 @@ public class TicTacToe extends TwinPlayerGame{
 		String string = command.toString();
 		if(StringUtils.length(string) == 2){
 			Move move = Move.valueOf("MOVE"+string.substring(1, 2));
-			if(this.matrix[move.getIndex()] !=  null){
+			int moveIndex = move.getIndex();
+			if(this.matrix[moveIndex] !=  null){
 				throw new Exception("Invalid Move");
 			}else{
-				this.matrix[move.getIndex()] = new PlayerMove(player, move);
+				this.matrix[moveIndex] = new PlayerMove(player, move);
 				drawMove(player.getImage(), move);
 			}
 		}
@@ -130,49 +123,53 @@ public class TicTacToe extends TwinPlayerGame{
 	}
 
 	private boolean checkMate() {
-		boolean row1 = checkLine(matrix[0], matrix[1], matrix[2]);
-		boolean row2 = checkLine(matrix[3], matrix[4], matrix[5]);
-		boolean row3 = checkLine(matrix[6], matrix[7], matrix[8]);
+		boolean row1 = checkLine(0, 1, 2);
+		boolean row2 = checkLine(3, 4, 5);
+		boolean row3 = checkLine(6, 7, 8);
 		
-		boolean col1 = checkLine(matrix[0], matrix[3], matrix[6]);
-		boolean col2 = checkLine(matrix[1], matrix[4], matrix[7]);
-		boolean col3 = checkLine(matrix[2], matrix[5], matrix[8]);
+		boolean col1 = checkLine(0, 3, 6);
+		boolean col2 = checkLine(1, 4, 7);
+		boolean col3 = checkLine(2, 5, 8);
 		
 		
-		boolean diagonal1 = checkLine(matrix[0], matrix[4], matrix[8]);
-		boolean diagonal2 = checkLine(matrix[2], matrix[4], matrix[6]);
+		boolean diagonal1 = checkLine(0, 4, 8);
+		boolean diagonal2 = checkLine(2, 4, 6);
 		boolean checkmate = BooleanUtils.xor(new boolean[]{row1, row2, row3, col1, col2, col3, diagonal1, diagonal2});
 		return checkmate;
 	}
 
-	private boolean checkLine(PlayerMove... row) {
-		if(ArrayUtils.contains(row, null)){
+	private boolean checkLine(int index1, int index2, int index3) {
+		PlayerMove first = matrix[index1];
+		PlayerMove second = matrix[index2];
+		PlayerMove third = matrix[index3];
+		
+		if(Arrays.asList(first, second, third).contains(null)){
 			return false;
 		}else{
-			boolean end = row[0].player().equals(row[1].player()) && row[1].player().equals(row[2].player());
+			boolean end = first.player().equals(second.player()) && second.player().equals(third.player());
 			if(end){
-				drawLine(row[0], row[2]);
+				drawLine(first, third);
 			}
 			return end; 
 		}
 	}
 
-	private ClassLoader getThisCLassLoader() {
-		ClassLoader classLoader = getClass().getClassLoader();
-		return classLoader;
-	}
 	private void drawLine(PlayerMove a, PlayerMove b) {
-		this.template.getGraphics().drawLine(a.move().getX(), a.move().getY(), b.move().getX(), b.move().getY());
+		Graphics2D graphics = (Graphics2D)this.template.getGraphics();
+		graphics.setColor(Color.BLUE);
+		graphics.setStroke(new BasicStroke(10F));
+		graphics.drawLine(a.move().getX()+25, a.move().getY(), b.move().getX()+25, b.move().getY()+40);
 	}
 	private void drawMove(BufferedImage playerBi, Move move) {
-		this.template.getGraphics().drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
+		Graphics2D graphics = (Graphics2D)this.template.getGraphics();
+		graphics.drawImage(playerBi, move.getX(), move.getY(), playerBi.getWidth(), playerBi.getHeight(), null);
 	}
 	public static void main(String[] args) throws Exception {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		System.out.println();
 //		System.out.println(new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(src));
-		TicTacToe game = new TicTacToe(null).set(Player.X).move(Command.X1);
+		TicTacToe game = new TicTacToe(null).set(Player.X).move(Command.X1).move(Command.X4).move(Command.X7);
 		System.out.println(gson.toJson(game.keyboard()));
+		FileUtils.copyFile(game.getBoard(), new File("C:/sang/test.png"));
 		/*List<List<String>> keyboard = game.move(Command.X5).move(Command.X8).keyboard();
 		
 		System.out.println(gson.toJson(keyboard));

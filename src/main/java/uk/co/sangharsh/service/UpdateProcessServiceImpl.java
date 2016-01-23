@@ -91,8 +91,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					this.games.put(from.getIdAsString(), new TicTacToe(from));
 					keyboard = new ArrayList<List<String>>(){{
 						add(new ArrayList<String>(){{
-							add("X");
-							add("O");
+							add(Player.X.toString());
+							add(Player.O.toString());
 						}});
 						add(new ArrayList<String>(){{
 							add(Command.QUIT.toString());
