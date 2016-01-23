@@ -1,7 +1,6 @@
 package uk.co.sangharsh.ws.resource;
 
 import static javax.ws.rs.core.Response.status;
-import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.OK;
 
 import java.util.List;
@@ -73,12 +72,7 @@ public class TelegramUpdateResource {
 	@Path(PROCESS_AUTO)
 	public Response processAuto(Update update){
 		updateProcessService.push(update);
-		try {
-			updateProcessService.process();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return status(INTERNAL_SERVER_ERROR).build();
-		}
+		updateProcessService.process();
 		return status(OK).build();
 	}
 }
