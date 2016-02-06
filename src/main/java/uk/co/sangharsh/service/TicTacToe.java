@@ -31,6 +31,8 @@ public class TicTacToe extends TwinPlayerGame{
 	private BufferedImage template;
 
 	private Player player;
+
+	private Player winner;
 	
 	public TicTacToe(User playerOne) throws IOException {
 		super(playerOne);
@@ -79,6 +81,8 @@ public class TicTacToe extends TwinPlayerGame{
 		boolean mate = checkMate();
 		if(!mate && player.equals(this.player)){
 			return systemMove();
+		}else{
+			this.winner =  player;
 		}
 		return this;
 	}
@@ -206,5 +210,13 @@ public class TicTacToe extends TwinPlayerGame{
 	public TicTacToe set(Player player) {
 		this.player = player;
 		return this;
+	}
+
+	public boolean ended() {
+		return this.winner != null;
+	}
+
+	public boolean isPlayerWinner() {
+		return this.player.equals(this.winner);
 	}
 }
