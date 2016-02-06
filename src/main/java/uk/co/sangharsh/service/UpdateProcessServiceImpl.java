@@ -96,7 +96,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				case O:
 					Game game = this.games.get(from.getIdAsString());
 					TicTacToe ticTacToe = (TicTacToe)game;
-					reply = ticTacToe.set(Player.valueOf(command.toString())).reply(command.toString());
+					reply = ticTacToe.set(Player.valueOf(command.toString())).reply("Make your move", command.toString());
 					break;
 				case O1:
 				case O2:
@@ -122,9 +122,9 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					game = this.games.get(from.getIdAsString());
 					ticTacToe = ((TicTacToe)game).move(command);
 					if(ticTacToe.ended()){
-						reply = begin(ticTacToe.isPlayerWinner() ? "You win. Select a game." :  "You Loose. Select a game."); 
+						reply = ticTacToe.reply(ticTacToe.isPlayerWinner() ? "You win. Select a game." :  "You Loose. Select a game.", command.toString(), beginKeyboard()); 
 					}else{
-						reply = ticTacToe.reply(command.toString());
+						reply = ticTacToe.reply("Make your move", command.toString());
 					}
 					break;
 				case UNKNOWN:
@@ -146,6 +146,11 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 	}
 
 	private SendableText begin(String message) {
+		List<List<String>> keyboard = beginKeyboard();
+		return SendableText.create(message, ReplyKeyboardMarkup.selective(keyboard).oneTime());
+	}
+
+	private List<List<String>> beginKeyboard() {
 		List<List<String>> keyboard;
 		keyboard = new ArrayList<List<String>>(){{
 			add(new ArrayList<String>(){{
@@ -155,7 +160,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				add(Command.CHESS.toString());
 			}});
 		}};
-		return SendableText.create(message, ReplyKeyboardMarkup.selective(keyboard).oneTime());
+		return keyboard;
 	}
 
 	private Result<Telegram> msg(Telegram message, SendableText reply) {

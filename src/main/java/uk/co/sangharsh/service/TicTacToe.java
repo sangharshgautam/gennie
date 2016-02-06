@@ -192,15 +192,18 @@ public class TicTacToe extends TwinPlayerGame{
 
 	}
 
-	public SendableImage reply(String command) throws IOException {
+	public SendableImage reply(String message, String command) throws IOException {
 		
-		File file = getBoard();
 		String player = command;
 		if(command.trim().length() >1){
 			player = command.substring(0, 1);
 		}
 		List<List<String>> keyboard = keyboard(Player.valueOf(player));
-		return SendableImage.create("Make your move", ReplyKeyboardMarkup.selective(keyboard).oneTime(), file );
+		return reply(message, command, keyboard);
+	}
+	
+	public SendableImage reply(String message, String command, List<List<String>> keyboard) throws IOException {
+		return SendableImage.create(message, ReplyKeyboardMarkup.selective(keyboard).oneTime(), this.getBoard() );
 	}
 
 	private File getBoard() throws IOException {
