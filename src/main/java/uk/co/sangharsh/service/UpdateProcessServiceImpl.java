@@ -129,15 +129,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					}
 					game = this.games.get(from.getIdAsString());
 					ticTacToe = ((TicTacToe)game).move(command);
-					if(ticTacToe.ended()){
-						if(ticTacToe.isPlayerWinner()){
-							reply = ticTacToe.reply("You Win.");
-						}else{
-							reply = ticTacToe.reply("You Lost.");
-						}
-					}else{
-						reply = ticTacToe.reply(command.toString());
-					}
+					reply = ticTacToe.reply(command.toString());
 					break;
 				case UNKNOWN:
 				default:
