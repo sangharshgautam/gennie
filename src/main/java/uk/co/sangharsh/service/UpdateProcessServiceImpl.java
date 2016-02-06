@@ -77,15 +77,7 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					//terminate game
 					this.games.remove(from.getIdAsString());
 				case HI:
-					keyboard = new ArrayList<List<String>>(){{
-						add(new ArrayList<String>(){{
-							add(Command.TICTACTOE.toString());
-						}});
-						add(new ArrayList<String>(){{
-							add(Command.CHESS.toString());
-						}});
-					}};
-					reply =  SendableText.create("Select a game...", ReplyKeyboardMarkup.selective(keyboard).oneTime());
+					reply = begin("Select a game...");
 					break;
 				case TICTACTOE:
 					this.games.put(from.getIdAsString(), new TicTacToe(from));
@@ -130,9 +122,10 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					game = this.games.get(from.getIdAsString());
 					ticTacToe = ((TicTacToe)game).move(command);
 					if(ticTacToe.ended()){
-						System.out.println("Player Winner "+ticTacToe.isPlayerWinner());
+						reply = begin(ticTacToe.isPlayerWinner() ? "You win. Select a game." :  "You Loose. Select a game."); 
+					}else{
+						reply = ticTacToe.reply(command.toString());
 					}
-					reply = ticTacToe.reply(command.toString());
 					break;
 				case UNKNOWN:
 				default:
@@ -150,6 +143,19 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 				updateService.update(update.markProcessed());
 			}
 		}
+	}
+
+	private SendableText begin(String message) {
+		List<List<String>> keyboard;
+		keyboard = new ArrayList<List<String>>(){{
+			add(new ArrayList<String>(){{
+				add(Command.TICTACTOE.toString());
+			}});
+			add(new ArrayList<String>(){{
+				add(Command.CHESS.toString());
+			}});
+		}};
+		return SendableText.create(message, ReplyKeyboardMarkup.selective(keyboard).oneTime());
 	}
 
 	private Result<Telegram> msg(Telegram message, SendableText reply) {

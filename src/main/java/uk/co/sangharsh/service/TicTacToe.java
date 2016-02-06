@@ -198,7 +198,7 @@ public class TicTacToe extends TwinPlayerGame{
 			player = command.substring(0, 1);
 		}
 		List<List<String>> keyboard = keyboard(Player.valueOf(player));
-		return SendableImage.create("Enter your move", ReplyKeyboardMarkup.selective(keyboard).oneTime(), file );
+		return SendableImage.create("Make your move", ReplyKeyboardMarkup.selective(keyboard).oneTime(), file );
 	}
 
 	private File getBoard() throws IOException {
