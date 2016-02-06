@@ -79,10 +79,12 @@ public class TicTacToe extends TwinPlayerGame{
 			}
 		}
 		boolean mate = checkMate();
-		if(!mate && player.equals(this.player)){
-			return systemMove();
-		}else{
+		if(mate){
 			this.winner =  player;
+		}else{
+			if(player.equals(this.player)){
+				return systemMove();
+			}
 		}
 		return this;
 	}
