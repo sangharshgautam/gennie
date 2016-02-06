@@ -140,8 +140,8 @@ public class UpdateProcessServiceImpl implements UpdateProcessService {
 					}else{
 						reply = ticTacToe.reply("You Loose.");
 					}
-					comm(update, Command.QUIT);
-					return ;
+					//comm(update, Command.QUIT);
+					//return ;
 				}else{
 					reply = ticTacToe.reply(command.toString());
 				}
