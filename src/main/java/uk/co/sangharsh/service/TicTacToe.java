@@ -93,30 +93,40 @@ public class TicTacToe extends TwinPlayerGame{
 	}
 	private TicTacToe systemMove() throws Exception {
 		//check own doubles to win
-		boolean winPossible = isWinningMove(matrix[0], matrix[1], matrix[2]);
+		boolean winPossible = isWinningMove(0, 1, 2);
 		if(winPossible){
-			winTheGame(matrix[0], matrix[1], matrix[2]);
+			return winTheGame(0, 1, 2);
 		}else{
 			for(int i =0;i<matrix.length;i++){
 				PlayerMove playerMove =  matrix[i];
 				if(playerMove == null){
-					return move(Command.valueOf(this.player.getOpponent().toString()+(i+1)), this.player.getOpponent());
+					Player opponent = this.player.getOpponent();
+					return move(Command.valueOf(opponent.toString()+(i+1)), opponent);
 				}
 			}
-
 		}
 		return this;
 	}
 
 
-	private void winTheGame(PlayerMove... playerMoves) {
-		
+	private TicTacToe winTheGame(int... indexes) throws Exception {
+		int winIndex  = -1;
+		for(int index : indexes){
+			PlayerMove playerMove = matrix[index];
+			if(playerMove == null){
+				winIndex = index;
+				break;
+			}
+		}
+		Player opponent = this.player.getOpponent();
+		return winIndex !=-1 ? move(Command.valueOf(opponent.toString()+(winIndex+1)), opponent) :  this;
 	}
 
-	private boolean isWinningMove(PlayerMove...playerMoves) {
+	private boolean isWinningMove(int...indexes) {
 		Player system = this.player.getOpponent();
 		int counter =0;
-		for(PlayerMove playerMove : playerMoves){
+		for(int index : indexes){
+			PlayerMove playerMove = matrix[index];
 			if(playerMove!=null){
 				if(this.player.equals(playerMove.player())){
 					return false;
