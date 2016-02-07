@@ -93,9 +93,22 @@ public class TicTacToe extends TwinPlayerGame{
 	}
 	private TicTacToe systemMove() throws Exception {
 		//check own doubles to win
-		boolean winPossible = isWinningMove(0, 1, 2);
-		if(winPossible){
+		if(isWinningMove(0, 1, 2)){
 			return winTheGame(0, 1, 2);
+		}else if(isWinningMove(3, 4, 5)){
+			return winTheGame(3, 4, 5);
+		}else if(isWinningMove(6, 7, 8)){
+			return winTheGame(6, 7, 8);
+		}if(isWinningMove(0, 3, 6)){
+			return winTheGame(0, 3, 6);
+		}if(isWinningMove(1, 4, 7)){
+			return winTheGame(1, 4, 7);
+		}if(isWinningMove(2, 5, 8)){
+			return winTheGame(2, 5, 8);
+		}if(isWinningMove(0, 4, 8)){
+			return winTheGame(0, 4, 8);
+		}if(isWinningMove(2, 4, 6)){
+			return winTheGame(2, 4, 6);
 		}else{
 			for(int i =0;i<matrix.length;i++){
 				PlayerMove playerMove =  matrix[i];
