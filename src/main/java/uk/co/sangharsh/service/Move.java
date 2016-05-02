@@ -1,7 +1,7 @@
 package uk.co.sangharsh.service;
 
 public enum Move {
-	MOVE1(0, 0+50, 0+100),
+	MOVE1(0, 0+40, 0+80),
 	MOVE2(1, 110+50, 0+100),
 	MOVE3(2, 220+50, 0+100),
 	MOVE4(3, 0+50, 110+100),
