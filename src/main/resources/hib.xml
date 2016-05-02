@@ -8,6 +8,8 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 	
 	<util:properties id="propertyConfigurer" location="classpath:env/env.properties"/>
+	<context:property-placeholder properties-ref="propertyConfigurer" ignore-resource-not-found="true" 
+		    location="file:///var/lib/openshift/5641f4152d52719591000048/app-root/data/env/env.properties" />
 	<context:property-placeholder properties-ref="propertyConfigurer" />
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
