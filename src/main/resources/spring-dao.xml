@@ -43,5 +43,5 @@
             <property name="testConnectionOnCheckin"><value>${hibernate.c3p0.testConnectionOnCheckin}</value></property>    
     </bean>
     
-	<import resource="classpath*:hib.xml"/>
+	<!-- <import resource="classpath*:hib.xml"/> -->
 </beans>        
