@@ -16,7 +16,7 @@
 <!-- 	<context:property-placeholder properties-ref="propertyConfigurer" ignore-resource-not-found="true" 
 		    location="classpath:env/local.properties" /> -->
 	<context:property-placeholder properties-ref="propertyConfigurer" ignore-resource-not-found="true" 
-		    location="file:///var/lib/openshift/5641f4152d52719591000048/app-root/repo/src/main/resources/env/openshift.properties" />
+		    location="file:///var/lib/openshift/57ffefa37628e1ae2d000144/app-root/repo/src/main/resources/env/openshift.properties" />
 		
 	<context:property-placeholder properties-ref="propertyConfigurer" />
 	
